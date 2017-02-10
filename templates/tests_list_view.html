@@ -2,19 +2,9 @@
 
 {%  block content %}
 
-{% for test in objects %}
-    <h3>{{ test }}</h3>
-    {% for question in test.questions.all %}
-       <p>{{ question }}</p>
-        {% for ans in question.answers.all %}
-             <p>{% if ans.is_correct %}<b>{{ ans }}</b>
-                 {% else %}
-                    {{ ans }}
-                {% endif %}
+{% for test in object_list %}
+    <h1><a href="">{{ test }}</a> </h1>
 
-             </p>
-        {% endfor %}
-    {% endfor %}
 {% endfor %}
 <br>
 
