@@ -1,21 +1,22 @@
 from django.shortcuts import render, HttpResponseRedirect
-from .models import TestModel, AnswerModel, QuestionModel
-from django.views.generic.edit import CreateView, FormView
+from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
+
 from .form import TestForm, QuestionForm, AnswerForm,  UploadFileForm
-from .upload_handler import handle_uploaded_file
+from .models import TestModel, AnswerModel, QuestionModel
+from .upload_handler import UploadHander
 
 
 def upload_file(request):
-    TestowaKlasa().funkcja()
     if request.method == 'POST':
         form = UploadFileForm(request.POST or None, request.FILES or None)
 
         if form.is_valid():
           #  handle_uploaded_file(request.FILES['file'])
             files = request.FILES.getlist('file')
-            for f in files:
-                handle_uploaded_file(f, form, request)
+            handler = UploadHander(request, files, form)
+            # for f in files:
+            #     handle_uploaded_file(f, form, request)
             return HttpResponseRedirect('/testownik/upload')
     else:
         form = UploadFileForm()

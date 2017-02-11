@@ -1,7 +1,12 @@
-from django.db import models
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.db import models
+
 User = settings.AUTH_USER_MODEL
+
+
+def upload_location(instance, filename):
+    return "%s/%s" %(instance.id, filename)
 
 
 class TestModel(models.Model):
@@ -23,7 +28,7 @@ class TestModel(models.Model):
 
 class QuestionModel(models.Model):
     user = models.ForeignKey(User, default=1)
-    question = models.TextField()
+    question = models.TextField(blank=True, null=True)
     img_question = models.ImageField(blank=True, null=True)
    # answers = models.ForeignKey(AnswerModel, blank=True)
     #answers = models.ManyToManyField(AnswerModel, blank=True)
