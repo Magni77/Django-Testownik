@@ -40,31 +40,37 @@ class FileFieldForm(forms.Form):
 
 
 class UploadFileForm(forms.Form):
+    codes = (
+        ('cp1250', 'Testownikowy'),
+        ('utf-8', 'UTF-8')
+        #  ('', 'Inny'),
+    )
     file = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
     test_choice = forms.ModelChoiceField(queryset=TestModel.objects.all(), empty_label=None)
+    encoding = forms.ChoiceField( choices=codes)
 
 
-class FileUploadForm(forms.Form):
-
-    file = forms.FileField()
-
-    def clean_file(self):
-        data = self.cleaned_data["file"]
-
-        # read and parse the file, create a Python dictionary `data_dict` from it
-        form = QuestionForm(data)
-        if form.is_valid():
-            # we don't want to put the object to the database on this step
-            self.instance = form.save(commit=False)
-        else:
-            # You can use more specific error message here
-            raise forms.ValidationError(u"The file contains invalid data.")
-        return data
-
-    def save(self):
-        # We are not overriding the `save` method here because `form.Form` does not have it.
-        # We just add it for convenience.
-        instance = getattr(self, "instance", None)
-        if instance:
-            instance.save()
-        return instance
+# class FileUploadForm(forms.Form):
+#
+#     file = forms.FileField()
+#
+#     def clean_file(self):
+#         data = self.cleaned_data["file"]
+#
+#         # read and parse the file, create a Python dictionary `data_dict` from it
+#         form = QuestionForm(data)
+#         if form.is_valid():
+#             # we don't want to put the object to the database on this step
+#             self.instance = form.save(commit=False)
+#         else:
+#             # You can use more specific error message here
+#             raise forms.ValidationError(u"The file contains invalid data.")
+#         return data
+#
+#     def save(self):
+#         # We are not overriding the `save` method here because `form.Form` does not have it.
+#         # We just add it for convenience.
+#         instance = getattr(self, "instance", None)
+#         if instance:
+#             instance.save()
+#         return instance

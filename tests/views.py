@@ -7,21 +7,19 @@ from .upload_handler import handle_uploaded_file
 
 
 def upload_file(request):
+    TestowaKlasa().funkcja()
     if request.method == 'POST':
         form = UploadFileForm(request.POST or None, request.FILES or None)
 
         if form.is_valid():
-            test_choice = form.cleaned_data.get('test_choice')
           #  handle_uploaded_file(request.FILES['file'])
             files = request.FILES.getlist('file')
-            print(request.FILES.getlist('file'))
             for f in files:
-                handle_uploaded_file(f, test_choice)
+                handle_uploaded_file(f, form, request)
             return HttpResponseRedirect('/testownik/upload')
     else:
         form = UploadFileForm()
     return render(request, 'create_view.html', {'form': form})
-
 
 
 class TestCreate(CreateView):

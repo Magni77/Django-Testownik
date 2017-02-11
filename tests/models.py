@@ -7,6 +7,7 @@ User = settings.AUTH_USER_MODEL
 class TestModel(models.Model):
     user = models.ForeignKey(User, default=1)
     title = models.CharField(max_length=150)
+    description = models.TextField(blank=True, null=True)
    # questions = models.ManyToManyField(QuestionModel, blank=True)
 
     class Meta:
@@ -23,7 +24,7 @@ class TestModel(models.Model):
 class QuestionModel(models.Model):
     user = models.ForeignKey(User, default=1)
     question = models.TextField()
-    txt_question = models.FileField(blank=True, null=True)
+    img_question = models.ImageField(blank=True, null=True)
    # answers = models.ForeignKey(AnswerModel, blank=True)
     #answers = models.ManyToManyField(AnswerModel, blank=True)
     hint = models.TextField(blank=True, null=True)
