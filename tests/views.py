@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 
-from .form import TestForm, QuestionForm, AnswerForm,  UploadFileForm
+from .form import QuestionForm, AnswerForm,  UploadFileForm
 from .models import TestModel, AnswerModel, QuestionModel
 from .upload_handler import UploadHander
 
@@ -12,11 +12,8 @@ def upload_file(request):
         form = UploadFileForm(request.POST or None, request.FILES or None)
 
         if form.is_valid():
-          #  handle_uploaded_file(request.FILES['file'])
             files = request.FILES.getlist('file')
-            handler = UploadHander(request, files, form)
-            # for f in files:
-            #     handle_uploaded_file(f, form, request)
+            UploadHander(request, files, form)
             return HttpResponseRedirect('/testownik/upload')
     else:
         form = UploadFileForm()
@@ -60,20 +57,4 @@ def test_list(request):
         "answers": ans
     }
     template = 'tests_list_view.html'
-    return render(request, template, context)
-
-
-def task_create(request):
-    form = TestForm(request.POST or None)
-    context = {
-        "form": TestForm
-    }
-    if form.is_valid():
-        obj = form.save(commit=False)
-        obj.save()
-        context = {
-            'form': TestForm()
-        }
-
-    template = 'create_view.html'
     return render(request, template, context)
