@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 
-from .form import QuestionForm, AnswerForm,  UploadFileForm
+from .form import TestForm, QuestionForm, AnswerForm,  UploadFileForm
 from .models import TestModel, AnswerModel, QuestionModel
 from .upload_handler import UploadHander
 
@@ -57,4 +57,20 @@ def test_list(request):
         "answers": ans
     }
     template = 'tests_list_view.html'
+    return render(request, template, context)
+
+
+def task_create(request):
+    form = TestForm(request.POST or None)
+    context = {
+        "form": TestForm
+    }
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.save()
+        context = {
+            'form': TestForm()
+        }
+
+    template = 'create_view.html'
     return render(request, template, context)
