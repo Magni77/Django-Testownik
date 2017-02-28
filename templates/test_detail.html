@@ -2,7 +2,6 @@
 
 {%  block content %}
 
-
 {% for test in object_list %}
     <h1>{{ test.title }}</h1>
 
@@ -14,14 +13,14 @@
             <h3>{{ question.question }}</h3>
         {%  endif %}
         {% for ans in question.answermodel_set.all %}
-                {% if ans.img_answer %}
-                    <img src="{{ ans.img_answer.url }}" class="img-responsive">
-                {% else %}
-                 <p>{% if ans.is_correct %}<b>{{ ans.answer }}</b>
-                     {% else %}
-                        {{ ans.answer }}
-                    {% endif %}
+            {% if ans.img_answer %}
+                <img src="{{ ans.img_answer.url }}" class="img-responsive">
+            {% else %}
+             <p>{% if ans.is_correct %}<b>{{ ans.answer }}</b>
+                 {% else %}
+                    {{ ans.answer }}
                 {% endif %}
+            {% endif %}
 
              </p>
         {% endfor %}

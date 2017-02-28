@@ -23,9 +23,9 @@ class TestModel(models.Model):
     description = models.TextField(blank=True, null=True)
    # questions = models.ManyToManyField(QuestionModel, blank=True)
 
-    @property
-    def questions(self):
-        return QuestionModel.objects.first()
+    # @property
+    # def questions(self):
+    #     return QuestionModel.objects.first()
 
     class Meta:
         verbose_name = 'Test'
@@ -39,7 +39,6 @@ class TestModel(models.Model):
 
     def __str__(self):
         return self.title
-
 
 
 class QuestionModel(models.Model):
