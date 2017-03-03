@@ -1,13 +1,13 @@
-Collecting whitenoise
-  Downloading whitenoise-3.3.0-py2.py3-none-any.whl
-Requirement already satisfied: pip in /usr/local/lib/python3.5/dist-packages
-Collecting freeze
-  Downloading freeze-1.0.10.tar.gz
-Requirement already satisfied: six in /usr/lib/python3/dist-packages (from freeze)
-Building wheels for collected packages: freeze
-  Running setup.py bdist_wheel for freeze: started
-  Running setup.py bdist_wheel for freeze: finished with status 'done'
-  Stored in directory: /root/.cache/pip/wheels/dd/f2/47/087b0fa08df94a9e9ded33273bd30e6d03a7b5ff0d0d452edc
-Successfully built freeze
-Installing collected packages: whitenoise, freeze
-Successfully installed freeze-1.0.10 whitenoise-3.3.0
+appdirs==1.4.0
+dj-database-url==0.4.2
+Django==1.10.5
+django-crispy-forms==1.6.1
+djangorestframework==3.5.4
+gunicorn==19.6.0
+olefile==0.44
+packaging==16.8
+Pillow==4.0.0
+psycopg2==2.6.2
+pyparsing==2.1.10
+six==1.10.0
+whitenoise==3.3.0
