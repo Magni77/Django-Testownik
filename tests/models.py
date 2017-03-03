@@ -21,6 +21,8 @@ class TestModel(models.Model):
     user = models.ForeignKey(User, default=1)
     title = models.CharField(max_length=150)
     description = models.TextField(blank=True, null=True)
+    is_public = models.BooleanField(default=False)
+
    # questions = models.ManyToManyField(QuestionModel, blank=True)
 
     # @property

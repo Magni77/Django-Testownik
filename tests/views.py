@@ -4,7 +4,7 @@ from django.views.generic.list import ListView
 
 from .form import TestForm, QuestionForm, AnswerForm,  UploadFileForm
 from .models import TestModel, AnswerModel, QuestionModel
-from .upload_handler import UploadHander
+from .upload_handler import UploadHandler
 
 
 def upload_file(request):
@@ -13,7 +13,7 @@ def upload_file(request):
 
         if form.is_valid():
             files = request.FILES.getlist('file')
-            UploadHander(request, files, form)
+            UploadHandler(request, files, form)
             return HttpResponseRedirect('/testownik/upload')
     else:
         form = UploadFileForm()

@@ -5,9 +5,14 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from .models import QuestionModel, AnswerModel
 
 
-class UploadHander():
+class UploadHandler():
+    """Handle uploading many questions files
+        :keys
+        request
+        request.FILES.getlist('file')
+        form
+    """
     def __init__(self, request, files, form):
-        self.data = []
         self.img_dic = []
         self.img_names_dic = []
         self.txt_dic = []
@@ -15,7 +20,6 @@ class UploadHander():
         self.encoding = form.cleaned_data.get('encoding')
         self.test_choice = form.cleaned_data.get('test_choice')
 
-        # start
         self.check_files(files)
 
         for f in self.txt_dic:
@@ -60,13 +64,16 @@ class UploadHander():
             else:
                 print('wrong file ') #TODO exception handler
 
-    def get_img(self, i, file):
+    def get_img(self, file, i):
         if i >= 2:
             return self.get_img_answer(file, i)
         else:
             return self.get_img_question(file)
 
     def get_img_question(self, file):
+        """
+        Check if file is img and return it
+        """
         fn = file.name[:-4]
         if fn in self.img_names_dic:
             return self.img_dic[self.img_names_dic.index(fn)]
@@ -76,9 +83,6 @@ class UploadHander():
         fnlc = file.name[:-4] + ascii_lowercase[index-2]
         if fn in self.img_names_dic or fnlc in self.img_names_dic:
             return self.img_dic[self.img_names_dic.index(fn)]
-
-    def check_imgs(self, data, idx):
-        pass
 
     def is_txt(self, file):
         if 'txt' in str(file):

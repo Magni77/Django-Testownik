@@ -1,10 +1,38 @@
-from rest_framework.serializers import ModelSerializer, SerializerMethodField
+from rest_framework.serializers import ModelSerializer, SerializerMethodField, HyperlinkedIdentityField
 
 from tests.models import TestModel, QuestionModel, AnswerModel
 
 
+class TestListSerializer(ModelSerializer):
+    url = HyperlinkedIdentityField(
+        view_name='tests-api:testDetail')
+  #  user = SerializerMethodField()
+    questions_count = SerializerMethodField()
+
+    class Meta:
+        model = TestModel
+        fields = [
+            'url',
+            'id',
+            'user',
+            'title',
+            'description',
+            'questions_count',
+            'is_public',
+        ]
+    #
+    # def get_user(self, obj):
+    #     return str(obj.user.username)
+
+    def get_questions_count(self, obj):
+        qs = QuestionModel.objects.filter(test=obj.id)
+        return len(qs)
+
+
 class TestSerializer(ModelSerializer):
     questions = SerializerMethodField()
+    questions_count = SerializerMethodField()
+    #user = SerializerMethodField()
 
     class Meta:
         model = TestModel
@@ -13,7 +41,10 @@ class TestSerializer(ModelSerializer):
             'user',
             'title',
             'description',
+            'questions_count',
+            'is_public',
             'questions',
+
         ]
 
     def get_questions(self, obj):
@@ -21,14 +52,24 @@ class TestSerializer(ModelSerializer):
         questions = QuestionSerializer(qs, many=True).data
         return questions
 
+    def get_questions_count(self, obj):
+        qs = QuestionModel.objects.filter(test=obj.id)
+        return len(qs)
+
+    #def get_user(self, obj):
+    #    return str(obj.user.username)
+
 
 class QuestionSerializer(ModelSerializer):
     answers = SerializerMethodField()
 
+   # url = HyperlinkedIdentityField(
+   #     view_name='tests-api:questionDetail')
+
     class Meta:
         model = QuestionModel
-
         fields = [
+        #    'url',
             'id',
             'question',
             'img_question',
@@ -45,10 +86,13 @@ class QuestionSerializer(ModelSerializer):
 
 
 class AnswerSerializer(ModelSerializer):
+   ##     view_name='tests-api:answerDetail')
+
     class Meta:
         model = AnswerModel
 
         fields = [
+           # 'url',
             'id',
             'answer',
             'img_answer',

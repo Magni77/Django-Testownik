@@ -67,6 +67,7 @@
 </nav>
 
     <div class="container">
+    {% csrf_token %}
 
         {% block content %} {% endblock %}
 
@@ -84,17 +85,23 @@
 </html>
 
 <script>
-    $.ajax({
-        url: '/api/',
-        type: 'GET',
-        success: function (data) {
-            console.log(data)
-        },
-        error: function (d) {
-            console.log(d)
-            console.log('dd')
-        }
-    });
+
+{#    $.ajax({#}
+{#        url: '/api/createtest/',#}
+{#        type: 'POST',#}
+{#        data: {#}
+{#            "user": 6,#}
+{#            "title": "Test by ajax",#}
+{#            "description": "1st by ajax"#}
+{#        },#}
+{#        success: function (data) {#}
+{#            console.log(data)#}
+{#        },#}
+{#        error: function (d) {#}
+{#            console.log(d)#}
+{#            console.log('dd')#}
+{#        }#}
+{#    });#}
 
 
 
