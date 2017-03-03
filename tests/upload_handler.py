@@ -64,7 +64,8 @@ class UploadHandler():
             else:
                 print('wrong file ') #TODO exception handler
 
-    def get_img(self, file, i):
+    def get_img(self, i, file):
+        print(i)
         if i >= 2:
             return self.get_img_answer(file, i)
         else:
