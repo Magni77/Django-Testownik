@@ -27,14 +27,14 @@ class UploadHandler():
 
     def read_fle(self, f):
         data_dic = []
-        i=0
+        i = 0
         for l in f:
             line = l.decode(self.encoding)
             if self.is_img_required(line):
                 data_dic.append(self.get_img(i, f))
             else:
                 data_dic.append(line)
-            i+=1
+            i += 1
 
         self.create_completed_objects(data_dic)
 
