@@ -25,7 +25,7 @@ SECRET_KEY = 'pybw^)gs(y%)n+@-+y(fd*2#zyp!zqi*(p+q#0869@a%%!j!u-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['testownikpwr.herokuapp.com']
 
 
 # Application definition
