@@ -14,7 +14,7 @@ def upload_file(request):
         if form.is_valid():
             files = request.FILES.getlist('file')
             UploadHandler(request, files, form)
-            return HttpResponseRedirect('/testownik/upload')
+            return HttpResponseRedirect('/upload')
     else:
         form = UploadFileForm()
     return render(request, 'create_view.html', {'form': form})
