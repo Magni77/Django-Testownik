@@ -65,7 +65,7 @@ class QuestionModel(models.Model):
 
 class AnswerModel(models.Model):
     user = models.ForeignKey(User, default=1)
-    answer = models.CharField(max_length=120, blank=True, null=True)
+    answer = models.TextField(blank=True, null=True)
     img_answer = models.ImageField(upload_to=upload_location, blank=True, null=True)
     is_correct = models.BooleanField(default=False)
     question = models.ForeignKey(QuestionModel, blank=True)

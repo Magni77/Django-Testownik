@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import datetime
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -27,6 +29,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['testownikpwr.herokuapp.com']
 
+AUTH_USER_MODEL = 'accounts.User'
+
 
 # Application definition
 
@@ -40,6 +44,7 @@ INSTALLED_APPS = [
     'tests',
     'rest_framework',
     'corsheaders',
+    'accounts'
 
 ]
 
@@ -77,11 +82,24 @@ TEMPLATES = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
-    ],
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    ),
     'PAGE_SIZE': 10
 }
+
+JWT_AUTH = {
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=9900),
+   # 'JWT_RESPONSE_PAYLOAD_HANDLER': 'accounts.api.custom_jwt.jwt_response_payload_handler',
+  #  'JWT_PAYLOAD_HANDLER': 'accounts.api.custom_jwt.jwt_payload_handler',
+}
+
 
 WSGI_APPLICATION = 'testownikPWR.wsgi.application'
 

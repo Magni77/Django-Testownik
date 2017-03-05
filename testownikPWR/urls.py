@@ -22,7 +22,8 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('tests.urls', namespace='testownik')),
-    url(r'api/', include('tests.api.urls', namespace='tests-api'))
+    url(r'api/', include('tests.api.urls', namespace='tests-api')),
+    url(r'api/users/', include('accounts.api.urls', namespace='accounts-api')),
 ]
 
 if settings.DEBUG:
