@@ -23,6 +23,7 @@ class TestModel(models.Model):
     description = models.TextField(blank=True, null=True)
     is_public = models.BooleanField(default=False)
 
+    #TODO add test's rating
    # questions = models.ManyToManyField(QuestionModel, blank=True)
 
     # @property

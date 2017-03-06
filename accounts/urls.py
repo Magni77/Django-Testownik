@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from rest_framework.authtoken import views
 from .views import (
     UserCreateAPIView,
-    UserLogOutAPIView
+    UserDetailsAPIView
     )
 
 User = get_user_model()
@@ -17,6 +17,8 @@ urlpatterns = [
     url(r'^login/', obtain_jwt_token),
     url(r'^token-refresh/', refresh_jwt_token),
     url(r'^token-verify/', verify_jwt_token),
+
+    url(r'^(?P<username>[\w.@+-]+)/$', UserDetailsAPIView.as_view(), name='user-detail'),
 
 ]
 

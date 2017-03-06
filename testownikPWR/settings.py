@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tests',
+    'learn',
     'rest_framework',
     'corsheaders',
     'accounts'
@@ -97,8 +98,8 @@ REST_FRAMEWORK = {
 JWT_AUTH = {
     'JWT_ALLOW_REFRESH': True,
     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=9900),
-    'JWT_RESPONSE_PAYLOAD_HANDLER': 'accounts.api.custom_jwt.jwt_response_payload_handler',
-    'JWT_PAYLOAD_HANDLER': 'accounts.api.custom_jwt.jwt_payload_handler',
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'accounts.custom_jwt.jwt_response_payload_handler',
+    'JWT_PAYLOAD_HANDLER': 'accounts.custom_jwt.jwt_payload_handler',
 }
 
 

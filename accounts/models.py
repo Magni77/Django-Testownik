@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.urlresolvers import reverse
+
 
 departments = (
     ('w1', 'W1'),
@@ -16,7 +18,8 @@ class User(AbstractUser):
     department = models.CharField(choices=departments, max_length=2, blank=True)
     specialization = models.CharField(max_length=60, blank=True)
 
-
+    def get_absolute_url(self):
+        return reverse("accounts", kwargs={"id": self.id})
 # @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 # def create_auth_token(sender, instance=None, created=False, **kwargs):
 #     if created:

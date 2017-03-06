@@ -4,6 +4,8 @@ from rest_framework.serializers import (ModelSerializer,
                                         EmailField,
                                         CharField,
                                         ValidationError)
+from tests.api.serializers import TestListSerializer
+from tests.models import TestModel
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login, logout
 from rest_framework_jwt.settings import api_settings
@@ -62,8 +64,21 @@ class UserCreateSerializer(ModelSerializer):
         return data
 
 
+class UserBasicDetailsSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+        ]
+
+
 class UserDetailSerializer(ModelSerializer):
     token = CharField(read_only=True)
+    user_tests = SerializerMethodField()
+   # lookup_field = 'username'
 
     class Meta:
         model = User
@@ -74,4 +89,11 @@ class UserDetailSerializer(ModelSerializer):
             'token',
             'first_name',
             'last_name',
+            'department',
+            'specialization',
+            'user_tests',
         ]
+
+    def get_user_tests(self, obj):
+        qs = TestModel.objects.filter(user=obj.id) #filter(content_type = obj.__class__)
+        return TestListSerializer(qs, many=True).data
