@@ -1,9 +1,14 @@
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
 from rest_framework.generics import CreateAPIView
+from rest_framework.decorators import detail_route, list_route
+from rest_framework.response import Response
 
-from .models import LearningSession
-from .serializers import LearningSessionListSerializer, LearningSessionSerializer, LearningSessionCreateSerializer
+from .models import LearningSession, QuestionStatistic
+from .serializers import (LearningSessionListSerializer,
+                          LearningSessionSerializer,
+                          LearningSessionCreateSerializer,
+                          QuestionStatisticSerializer)
 
 User = get_user_model()
 
@@ -24,6 +29,12 @@ class LearningSessionViewSet(viewsets.ModelViewSet):
         user = self.request.user
         return user.learningsession_set.all()
 
+    @detail_route()
+    def statistics(self, request, pk=None):
+        qs = QuestionStatistic.objects.filter(learning_session=pk)
+        serializer = QuestionStatisticSerializer(qs, many=True)
+        return Response(serializer.data)
+
     # def create(self, request, *args, **kwargs):
     #     data = request.data
     #    # print(self.get_object())
@@ -31,7 +42,3 @@ class LearningSessionViewSet(viewsets.ModelViewSet):
     #     print(data)
     #     return Response({'status': 'password set'})
 
-
-class LearingSessionCreateAPIView(CreateAPIView):
-    queryset = LearningSession.objects.all()
-    serializer_class = LearningSessionCreateSerializer

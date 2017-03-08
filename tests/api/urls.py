@@ -4,6 +4,7 @@ from .views import (
     TestListAPIView, QuestionListAPIView,
     TestDetailAPIView, QuestionDetailAPIView, AnswerDetailAPIView,
     TestCreateAPIView, QuestionCreateAPIView, AnswerCreateAPIView,
+    TestUploadView
     )
 
 urlpatterns = [
@@ -17,5 +18,7 @@ urlpatterns = [
     url(r'^tests/(?P<pk>\d+)/$', TestDetailAPIView.as_view(), name='testDetail'),
     url(r'^questions/(?P<pk>\d+)/$', QuestionDetailAPIView.as_view(), name='questionDetail'),
     url(r'^answers/(?P<pk>\d+)/$', AnswerDetailAPIView.as_view(), name='answerDetail'),
+
+    url(r'^upload/$', TestUploadView.as_view(), name='upload'),
 
 ]

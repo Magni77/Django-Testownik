@@ -1,8 +1,29 @@
-from rest_framework.serializers import ModelSerializer, SerializerMethodField
-
+from rest_framework.serializers import (ModelSerializer,
+                                        Serializer,
+                                        SerializerMethodField,
+                                        ListField,
+                                        FileField,
+                                        ValidationError)
 from tests.models import TestModel, QuestionModel, AnswerModel
 #from learn.serializers import QuestionStatisticSerializer
 #from learn.models import QuestionStatistic
+from .models import UploadFileModel
+from django.conf import settings
+
+
+class UploadFileSerializer(ModelSerializer):
+    files = ListField(
+        child=FileField(max_length=100000,
+                                    allow_empty_file=False,
+                                    use_url=False)
+    )
+
+    class Meta:
+        model = UploadFileModel
+        fields = ['files',
+                  'encoding',
+                  'test_choice',
+                  ]
 
 
 class TestListSerializer(ModelSerializer):
@@ -101,54 +122,3 @@ class AnswerSerializer(ModelSerializer):
             'is_correct'
 
         ]
-
-
-# class TestLearningSerializer(ModelSerializer):
-#     questions = SerializerMethodField()
-#     #user = SerializerMethodField()
-#
-#     class Meta:
-#         model = TestModel
-#         fields = [
-#             'id',
-#             'user',
-#             'title',
-#             'description',
-#             'questions_count',
-#             'is_public',
-#             'questions',
-#
-#         ]
-#
-#     def get_questions(self, obj):
-#         qs = QuestionModel.objects.filter(test=obj.id) #filter(content_type = obj.__class__)
-#         questions = QuestionSerializer(qs, many=True).data
-#         return questions
-#
-#
-# class QuestionLearnSerializer(ModelSerializer):
-#     answers = SerializerMethodField()
-#     statistics = SerializerMethodField()
-#
-#     class Meta:
-#         model = QuestionModel
-#         fields = [
-#         #    'url',
-#             'id',
-#             'question',
-#             'img_question',
-#             'hint',
-#             'test',
-#             'statistics',
-#             'answers'
-#
-#         ]
-#
-#     def get_answers(self, obj):
-#         qs = AnswerModel.objects.filter(question=obj.id) #filter(content_type = obj.__class__)
-#         answers = AnswerSerializer(qs, many=True).data
-#         return answers
-#
-#     def get_statistics(self, obj):
-#         qs = QuestionStatistic.objects.filter(question=obj.id) #filter(content_type = obj.__class__)
-#         return QuestionStatisticSerializer(qs, many=True).data

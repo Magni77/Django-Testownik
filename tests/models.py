@@ -46,7 +46,7 @@ class TestModel(models.Model):
 
 class QuestionModel(models.Model):
     user = models.ForeignKey(User, default=1)
-    question = models.TextField(blank=True, null=True)
+    question = models.CharField(max_length=500, blank=True, null=True)
     img_question = models.ImageField(upload_to=upload_location, blank=True, null=True)
    # answers = models.ForeignKey(AnswerModel, blank=True)
     #answers = models.ManyToManyField(AnswerModel, blank=True)
@@ -66,7 +66,7 @@ class QuestionModel(models.Model):
 
 class AnswerModel(models.Model):
     user = models.ForeignKey(User, default=1)
-    answer = models.TextField(blank=True, null=True)
+    answer = models.CharField(max_length=500, blank=True, null=True)
     img_answer = models.ImageField(upload_to=upload_location, blank=True, null=True)
     is_correct = models.BooleanField(default=False)
     question = models.ForeignKey(QuestionModel, blank=True)

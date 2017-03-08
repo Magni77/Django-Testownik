@@ -12,14 +12,17 @@ class UploadHandler():
         request.FILES.getlist('file')
         form
     """
-    def __init__(self, request, files, form):
+    def __init__(self, request, files, form, is_rest=False):
         self.img_dic = []
         self.img_names_dic = []
         self.txt_dic = []
         self.user = request.user
-        self.encoding = form.cleaned_data.get('encoding')
-        self.test_choice = form.cleaned_data.get('test_choice')
-
+        if not is_rest:
+            self.encoding = form.cleaned_data.get('encoding')
+            self.test_choice = form.cleaned_data.get('test_choice')
+        else:
+            self.encoding = form.data.get('encoding')
+            self.test_choice = form.data.get('test_choice')
         self.check_files(files)
 
         for f in self.txt_dic:

@@ -8,16 +8,21 @@ class TestAdmin(admin.ModelAdmin):
         model = TestModel
 
 
+class AnswersAdmin(admin.TabularInline):
+    model = AnswerModel
+
+
 class QuestionsAdmin(admin.ModelAdmin):
+    inlines = [AnswersAdmin]
+
     class Meta:
         model = QuestionModel
 
 
-class AnswersAdmin(admin.ModelAdmin):
-    class Meta:
-        model = AnswerModel
+
 
 
 admin.site.register(TestModel, TestAdmin)
 admin.site.register(QuestionModel, QuestionsAdmin)
-admin.site.register(AnswerModel, AnswersAdmin)
+#admin.site.register(AnswerModel, AnswersAdmin)
+
