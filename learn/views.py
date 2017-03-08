@@ -1,24 +1,37 @@
-from .serializers import LearningSessionSerializer
-from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView, ListAPIView
-from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
-from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
-from rest_framework.permissions import (
-    AllowAny,
-    IsAuthenticated,
-    IsAdminUser,
-    IsAuthenticatedOrReadOnly,
-    )
+from rest_framework import viewsets
+from rest_framework.generics import CreateAPIView
+
 from .models import LearningSession
+from .serializers import LearningSessionListSerializer, LearningSessionSerializer, LearningSessionCreateSerializer
+
 User = get_user_model()
 
 
-class LearningSessionAPIView(RetrieveUpdateAPIView):
-    serializer_class = LearningSessionSerializer
+class LearningSessionViewSet(viewsets.ModelViewSet):
+ #   serializer_class = LearningSessionSerializer
     queryset = LearningSession.objects.all()
 
+    def get_serializer_class(self):
+        if self.action in ('list'):
+            return LearningSessionListSerializer
+        elif self.action in ('create', 'update', 'partial_update'):
+            return LearningSessionCreateSerializer
+        else:
+            return LearningSessionSerializer
 
-class LearningSessionListAPIView(ListAPIView):
-    serializer_class = LearningSessionSerializer
+    def get_queryset(self):
+        user = self.request.user
+        return user.learningsession_set.all()
+
+    # def create(self, request, *args, **kwargs):
+    #     data = request.data
+    #    # print(self.get_object())
+    #    # serializer = QuestionStatisticSerializer
+    #     print(data)
+    #     return Response({'status': 'password set'})
+
+
+class LearingSessionCreateAPIView(CreateAPIView):
     queryset = LearningSession.objects.all()
+    serializer_class = LearningSessionCreateSerializer

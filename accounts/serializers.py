@@ -1,15 +1,15 @@
+from django.contrib.auth import get_user_model
 from rest_framework.serializers import (ModelSerializer,
+                                        Serializer,
                                         SerializerMethodField,
-                                        HyperlinkedIdentityField,
                                         EmailField,
                                         CharField,
                                         ValidationError)
+
+from learn.models import LearningSession
+from learn.serializers import LearningSessionListSerializer
 from tests.api.serializers import TestListSerializer
 from tests.models import TestModel
-from django.contrib.auth import get_user_model
-from django.contrib.auth import authenticate, login, logout
-from rest_framework_jwt.settings import api_settings
-
 
 User = get_user_model()
 
@@ -78,6 +78,7 @@ class UserBasicDetailsSerializer(ModelSerializer):
 class UserDetailSerializer(ModelSerializer):
     token = CharField(read_only=True)
     user_tests = SerializerMethodField()
+    user_sessions = SerializerMethodField()
    # lookup_field = 'username'
 
     class Meta:
@@ -92,8 +93,30 @@ class UserDetailSerializer(ModelSerializer):
             'department',
             'specialization',
             'user_tests',
+            'user_sessions',
         ]
 
     def get_user_tests(self, obj):
         qs = TestModel.objects.filter(user=obj.id) #filter(content_type = obj.__class__)
         return TestListSerializer(qs, many=True).data
+
+    def get_user_sessions(self, obj):
+        qs = LearningSession.objects.filter(user=obj.id) #filter(content_type = obj.__class__)
+        return LearningSessionListSerializer(qs, many=True).data
+
+
+class PasswordSerializer(Serializer):
+    password = CharField(max_length=15)
+    password2 = CharField(max_length=15)
+
+    def validate(self, attrs):
+        data = self.get_initial()
+        pwd1 = data.get('password')
+        pwd2 = data.get('password2')
+        if pwd1 != pwd2:
+            raise ValidationError("Passwords must match.")
+
+        if len(pwd1) < 8:
+            raise ValidationError('Password too short')
+
+        return attrs

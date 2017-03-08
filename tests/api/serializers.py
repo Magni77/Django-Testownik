@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer, SerializerMethodField, HyperlinkedIdentityField
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
 from tests.models import TestModel, QuestionModel, AnswerModel
 #from learn.serializers import QuestionStatisticSerializer
@@ -6,15 +6,15 @@ from tests.models import TestModel, QuestionModel, AnswerModel
 
 
 class TestListSerializer(ModelSerializer):
-   # url = HyperlinkedIdentityField(
-    #     view_name='tests-api:testDetail')
+  #  url = HyperlinkedIdentityField(
+  #       view_name='tests-api:testDetail')
    # user = UserBasicDetailsSerializer()
     questions_count = SerializerMethodField()
 
     class Meta:
         model = TestModel
         fields = [
-         #   'url',
+       #     'url',
             'id',
             'user',
             'title',

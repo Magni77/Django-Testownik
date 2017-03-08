@@ -1,8 +1,10 @@
-from django.db import models
-from tests.models import TestModel, QuestionModel
 from django.conf import settings
-from django.utils import timezone
 from django.core.exceptions import ValidationError
+from django.db import models
+from django.utils import timezone
+
+from tests.models import TestModel, QuestionModel
+
 User = settings.AUTH_USER_MODEL
 # Create your models here.
 
@@ -17,7 +19,12 @@ class LearningSession(models.Model):
     created = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
     is_active = models.BooleanField(default=True)
+    wrong_answers = models.IntegerField(default=0)
+    correct_answers = models.IntegerField(default=0)
 
+
+
+          #  obj.save()
     # def clean(self):
     #     user_qs = LearningSession.objects.filter(user=self.user)
     #     #print(dir(user_qs.first().user))
@@ -38,13 +45,10 @@ class QuestionStatistic(models.Model):
         on_delete=models.SET_NULL,
         null=True
     )
-    # test = models.ForeignKey(
-    #     QuestionModel,
-    #     on_delete=models.SET_NULL,
-    #     null=True,
-    # )
+
     learning_session = models.ForeignKey(LearningSession)
     replies = models.IntegerField(default=3)
+    attempts = models.IntegerField(default=0)
 
     def clean(self):
         user_qs = QuestionStatistic.objects.filter(question=self.question,
@@ -52,4 +56,7 @@ class QuestionStatistic(models.Model):
         if len(user_qs) > 0:
             if self.question == user_qs.first().question:
                 if self.learning_session == user_qs.first().learning_session:
-                    raise ValidationError("This user has already.")
+                    raise ValidationError("This question is alredy in session.")
+
+    def __str__(self):
+        return "{}  {}".format(self.question, self.learning_session)

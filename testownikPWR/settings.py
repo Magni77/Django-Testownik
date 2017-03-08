@@ -10,10 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
-import os
 import datetime
-import dj_database_url
+import os
 
+import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -56,7 +56,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+   # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -98,8 +98,8 @@ REST_FRAMEWORK = {
 JWT_AUTH = {
     'JWT_ALLOW_REFRESH': True,
     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=9900),
-    'JWT_RESPONSE_PAYLOAD_HANDLER': 'accounts.custom_jwt.jwt_response_payload_handler',
-    'JWT_PAYLOAD_HANDLER': 'accounts.custom_jwt.jwt_payload_handler',
+   # 'JWT_RESPONSE_PAYLOAD_HANDLER': 'accounts.custom_jwt.jwt_response_payload_handler',
+   # 'JWT_PAYLOAD_HANDLER': 'accounts.custom_jwt.jwt_payload_handler',
 }
 
 
