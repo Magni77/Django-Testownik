@@ -1,16 +1,17 @@
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import detail_route, list_route
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import (
     AllowAny,
     IsAuthenticatedOrReadOnly,
+    IsAuthenticated
     )
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
-from .serializers import UserCreateSerializer,  UserDetailSerializer, PasswordSerializer
+from .serializers import UserCreateSerializer,  UserDetailSerializer, PasswordSerializer, UserBasicDetailsSerializer
 
 User = get_user_model()
 
@@ -19,22 +20,6 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserDetailSerializer
     lookup_field = 'username'
-
-
-       # else:
-       #     return PasswordSerializer
-    # def retrieve(self, request, username=None):
-    #     context = {'request': request}
-    #     instance = self.get_object()
-    #    # serializer = self.get_serializer(instance)
-    #
-    #     obj = UserDetailSerializer(instance)
-    #     serializer = self.get_serializer(instance)
-    #
-    #     return Response(serializer.data)
-    # # def register(self, request, pk=None):
-    # #     pass
-
 
     @detail_route(methods=['post'], permission_classes=[IsAuthenticatedOrReadOnly], url_path='change-password')
     def set_password(self, request, username=None):
@@ -48,6 +33,13 @@ class UserViewSet(viewsets.ModelViewSet):
         else:
             return Response(serializer.errors,
                             status=HTTP_400_BAD_REQUEST)
+
+    @list_route(methods=['GET'], permission_classes=[IsAuthenticated])
+    def me(self, request,  *args, **kwargs):
+        self.kwargs.update(username=request.user.username)
+        user = self.get_object()
+        serializer = UserDetailSerializer(user)
+        return Response(serializer.data)
 
 
 class UserCreateAPIView(CreateAPIView):
