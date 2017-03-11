@@ -11,8 +11,6 @@ from .views import (
 
 User = get_user_model()
 
-router = routers.SimpleRouter()
-router.register(r'', UserViewSet)
 
 urlpatterns = [
     url(r'^register/$', UserCreateAPIView.as_view(), name='register'),
@@ -20,6 +18,8 @@ urlpatterns = [
     url(r'^token-refresh/', refresh_jwt_token),
     url(r'^token-verify/', verify_jwt_token),
 ]
+router = routers.SimpleRouter()
+router.register(r'', UserViewSet)
 
 urlpatterns += router.urls
 

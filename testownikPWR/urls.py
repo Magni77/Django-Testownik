@@ -17,14 +17,16 @@ from django.conf import settings
 from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
+from rest_framework.documentation import include_docs_urls
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('tests.urls', namespace='testownik')),
-    url(r'api/', include('tests.api.urls', namespace='tests-api')),
-    url(r'api/users/', include('accounts.urls', namespace='accounts-api')),
-    url(r'api/learn/', include('learn.urls', namespace='learn-api')),
+    url(r'^api/', include('tests.api.urls', namespace='tests-api')),
+    url(r'^api/users/', include('accounts.urls', namespace='accounts-api')),
+    url(r'^api/learn/', include('learn.urls', namespace='learn-api')),
+    url(r'^api/docs/', include_docs_urls(title='api-docs'))
 ]
 
 if settings.DEBUG:

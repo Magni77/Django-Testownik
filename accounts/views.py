@@ -21,7 +21,10 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserDetailSerializer
     lookup_field = 'username'
 
-    @detail_route(methods=['post'], permission_classes=[IsAuthenticatedOrReadOnly], url_path='change-password')
+    def post(self):
+        pass
+
+    @detail_route(methods=['POST'], permission_classes=[IsAuthenticatedOrReadOnly], url_path='change-password')
     def set_password(self, request, username=None):
         user = self.get_object()
         serializer = PasswordSerializer(data=request.data)
@@ -36,6 +39,9 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @list_route(methods=['GET'], permission_classes=[IsAuthenticated])
     def me(self, request,  *args, **kwargs):
+        """
+        Returns authenticated user info
+        """
         self.kwargs.update(username=request.user.username)
         user = self.get_object()
         serializer = UserDetailSerializer(user)

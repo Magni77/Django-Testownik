@@ -2,7 +2,7 @@ appdirs==1.4.0
 dj-database-url==0.4.2
 Django==1.10.5
 django-crispy-forms==1.6.1
-djangorestframework==3.5.4
+djangorestframework==3.6.2
 gunicorn==19.6.0
 olefile==0.44
 packaging==16.8
@@ -14,3 +14,6 @@ whitenoise==3.3.0
 django_cors_headers==2.0.2
 djangorestframework-jwt==1.9.0
 PyJWT==1.4.2
+coreapi==2.3.0
+pygments==2.2.0
+markdown==2.6.8
