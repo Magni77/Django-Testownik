@@ -14,6 +14,16 @@ User = get_user_model()
 
 
 class LearningSessionViewSet(viewsets.ModelViewSet):
+    """
+    Functionality to save user's learning statistic's
+    Everyone can only have one active learning session.
+
+    list:
+    logged user learning sessions
+
+
+
+    """
  #   serializer_class = LearningSessionSerializer
     queryset = LearningSession.objects.all()
 

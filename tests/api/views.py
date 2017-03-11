@@ -9,11 +9,13 @@ from .serializers import TestSerializer, TestListSerializer, QuestionSerializer,
 from rest_framework.response import Response
 from .models import UploadFileModel
 from tests.upload_handler import UploadHandler
+from rest_framework.permissions import AllowAny
 
 
 class TestListAPIView(ListAPIView):
     queryset = TestModel.objects.all()
     serializer_class = TestListSerializer
+    permission_classes = [AllowAny]
 
 
 class QuestionListAPIView(ListAPIView):
