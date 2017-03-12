@@ -1,21 +1,21 @@
 from django.conf.urls import url
 from django.contrib.auth import get_user_model
 from rest_framework import routers
-from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
+#from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
 
 from .views import (
     UserViewSet
   #  UserDetailsAPIView
     )
 
-User = get_user_model()
 
 
 urlpatterns = [
-    url(r'^login/', obtain_jwt_token),
-    url(r'^token-refresh/', refresh_jwt_token),
-    url(r'^token-verify/', verify_jwt_token),
+    # url(r'^login/', obtain_jwt_token),
+    # url(r'^token-refresh/', refresh_jwt_token),
+    # url(r'^token-verify/', verify_jwt_token),
 ]
+
 router = routers.SimpleRouter()
 router.register(r'', UserViewSet)
 

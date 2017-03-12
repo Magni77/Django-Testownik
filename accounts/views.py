@@ -11,7 +11,9 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
-from .serializers import UserCreateSerializer,  UserDetailSerializer, PasswordSerializer, UserBasicDetailsSerializer
+from .serializers import UserCreateSerializer,  UserDetailSerializer, PasswordSerializer, UserBasicDetailsSerializer, UserLoginSerializer
+from rest_framework_jwt.views import obtain_jwt_token
+from rest_framework_jwt.settings import api_settings
 
 User = get_user_model()
 
@@ -19,7 +21,10 @@ User = get_user_model()
 class UserViewSet(viewsets.ModelViewSet):
     """
     create:
-    Register new user
+    *With 2 arguments - username and password:
+        :return auth token
+    *with 3 arguments - username, email, password:
+        :return create new user
 
     me:
     Returns authenticated user info
@@ -29,6 +34,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
     """
+
     queryset = User.objects.all()
     lookup_field = 'username'
 
@@ -39,19 +45,39 @@ class UserViewSet(viewsets.ModelViewSet):
             return UserDetailSerializer
 
     def create(self, request, *args, **kwargs):
-        serializer = UserCreateSerializer(data=request.data)
-        if serializer.is_valid():
-            data = serializer.data
-            user_obj = User(
-                username=data['username'],
-                email=data['email']
-            )
-            user_obj.set_password(request.data['password'])
-            user_obj.save()
-            return Response({'status': 'User created'})
+        register_serializer = UserCreateSerializer(data=request.data)
+        login_serializer = UserLoginSerializer(data=request.data)
+
+        if register_serializer.is_valid():
+            return self.register(register_serializer, request)
+        elif login_serializer.is_valid():
+            return self.login(request)
         else:
-            return Response(serializer.errors,
+            return Response(login_serializer.errors,
                             status=HTTP_400_BAD_REQUEST)
+
+    def login(self, request, *args, **kwargs):
+        return Response({'token': self.token(request)})
+
+    def register(self, serializer, request):
+        data = serializer.data
+        user_obj = User(
+            username=data['username'],
+            email=data['email']
+        )
+        user_obj.set_password(request.data['password'])
+        user_obj.save()
+        return Response({'status': 'User created'})
+
+    def token(self, request):
+        jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+        jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+
+        payload = jwt_payload_handler(request.user)
+        token = jwt_encode_handler(payload)
+        return token
+
+
 
     @detail_route(methods=['POST'], permission_classes=[IsAuthenticatedOrReadOnly], url_path='change-password')
     def set_password(self, request, username=None):

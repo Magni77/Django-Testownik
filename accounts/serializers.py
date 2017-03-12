@@ -103,3 +103,8 @@ class PasswordSerializer(Serializer):
             raise ValidationError('Password too short')
 
         return attrs
+
+
+class UserLoginSerializer(Serializer):
+    username = CharField(max_length=250)
+    password = CharField(max_length=15)
