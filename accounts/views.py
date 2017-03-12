@@ -11,8 +11,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
-from .serializers import UserCreateSerializer,  UserDetailSerializer, PasswordSerializer, UserBasicDetailsSerializer, UserLoginSerializer
-from rest_framework_jwt.views import obtain_jwt_token
+from .serializers import UserCreateSerializer,  UserDetailSerializer, PasswordSerializer
 from rest_framework_jwt.settings import api_settings
 
 User = get_user_model()
@@ -20,11 +19,8 @@ User = get_user_model()
 
 class UserViewSet(viewsets.ModelViewSet):
     """
-    auth:
-    1. With 2 arguments - username and password:
-    ⋅⋅*    :return auth token
-    2. with 3 arguments - username, email, password:
-    ⋅⋅*  :return create new user
+    register:
+    create new user
 
     me:
     Returns authenticated user info
@@ -55,16 +51,16 @@ class UserViewSet(viewsets.ModelViewSet):
             )
             user_obj.set_password(request.data['password'])
             user_obj.save()
-            return Response({'status': 'User created', 'token': self.token(request)})
+            return Response({'status': 'User created', 'token': self.token(user_obj)})
         else:
             return Response(serializer.errors,
                             status=HTTP_400_BAD_REQUEST)
-        
-    def token(self, request):
+
+    def token(self, user_obj):
         jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
         jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
-        payload = jwt_payload_handler(request.user)
+        payload = jwt_payload_handler(user_obj)
         token = jwt_encode_handler(payload)
         return token
 
