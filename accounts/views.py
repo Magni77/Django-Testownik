@@ -20,11 +20,11 @@ User = get_user_model()
 
 class UserViewSet(viewsets.ModelViewSet):
     """
-    create:
-    *With 2 arguments - username and password:
-        :return auth token
-    *with 3 arguments - username, email, password:
-        :return create new user
+    auth:
+    1. With 2 arguments - username and password:
+    ⋅⋅*    :return auth token
+    2. with 3 arguments - username, email, password:
+    ⋅⋅*  :return create new user
 
     me:
     Returns authenticated user info
@@ -44,7 +44,8 @@ class UserViewSet(viewsets.ModelViewSet):
         else:
             return UserDetailSerializer
 
-    def create(self, request, *args, **kwargs):
+    @list_route(methods=['POST'], permission_classes=[AllowAny])
+    def auth(self, request, *args, **kwargs):
         register_serializer = UserCreateSerializer(data=request.data)
         login_serializer = UserLoginSerializer(data=request.data)
 
