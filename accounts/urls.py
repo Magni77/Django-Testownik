@@ -4,7 +4,6 @@ from rest_framework import routers
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
 
 from .views import (
-    UserCreateAPIView,
     UserViewSet
   #  UserDetailsAPIView
     )
@@ -13,7 +12,6 @@ User = get_user_model()
 
 
 urlpatterns = [
-    url(r'^register/$', UserCreateAPIView.as_view(), name='register'),
     url(r'^login/', obtain_jwt_token),
     url(r'^token-refresh/', refresh_jwt_token),
     url(r'^token-verify/', verify_jwt_token),

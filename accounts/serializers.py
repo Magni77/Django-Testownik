@@ -16,14 +16,12 @@ User = get_user_model()
 
 class UserCreateSerializer(ModelSerializer):
     email = EmailField(label='Email Address')
-    email2 = EmailField(label='Confirm Email')
 
     class Meta:
         model = User
         fields = [
             'username',
             'email',
-            'email2',
             'password',
         ]
         extra_kwargs = {"password":
@@ -32,23 +30,12 @@ class UserCreateSerializer(ModelSerializer):
 
     def validate_email(self, value):
         data = self.get_initial()
-        email1 = data.get("email2")
-        email2 = value
-        if email1 != email2:
-            raise ValidationError("Emails must match.")
+        email = value
 
-        user_qs = User.objects.filter(email=email2)
+        user_qs = User.objects.filter(email=email)
         if user_qs.exists():
             raise ValidationError("This user has already registered.")
 
-        return value
-
-    def validate_email2(self, value):
-        data = self.get_initial()
-        email1 = data.get("email")
-        email2 = value
-        if email1 != email2:
-            raise ValidationError("Emails must match.")
         return value
 
     def create(self, data):
@@ -107,16 +94,12 @@ class UserDetailSerializer(ModelSerializer):
 
 class PasswordSerializer(Serializer):
     password = CharField(max_length=15)
-    password2 = CharField(max_length=15)
 
     def validate(self, attrs):
         data = self.get_initial()
         pwd1 = data.get('password')
-        pwd2 = data.get('password2')
-        if pwd1 != pwd2:
-            raise ValidationError("Passwords must match.")
 
-        if len(pwd1) < 8:
+        if len(pwd1) < 7:
             raise ValidationError('Password too short')
 
         return attrs

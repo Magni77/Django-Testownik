@@ -17,12 +17,41 @@ User = get_user_model()
 
 
 class UserViewSet(viewsets.ModelViewSet):
+    """
+    create:
+    Register new user
+
+    me:
+    Returns authenticated user info
+
+    set_password:
+    Change user password
+
+
+    """
     queryset = User.objects.all()
-    serializer_class = UserDetailSerializer
     lookup_field = 'username'
 
-    def post(self):
-        pass
+    def get_serializer_class(self):
+        if self.action in ('create'):
+            return UserCreateSerializer
+        else:
+            return UserDetailSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = UserCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            data = serializer.data
+            user_obj = User(
+                username=data['username'],
+                email=data['email']
+            )
+            user_obj.set_password(request.data['password'])
+            user_obj.save()
+            return Response({'status': 'User created'})
+        else:
+            return Response(serializer.errors,
+                            status=HTTP_400_BAD_REQUEST)
 
     @detail_route(methods=['POST'], permission_classes=[IsAuthenticatedOrReadOnly], url_path='change-password')
     def set_password(self, request, username=None):
@@ -39,19 +68,11 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @list_route(methods=['GET'], permission_classes=[IsAuthenticated])
     def me(self, request,  *args, **kwargs):
-        """
-        Returns authenticated user info
-        """
+
         self.kwargs.update(username=request.user.username)
         user = self.get_object()
         serializer = UserDetailSerializer(user)
         return Response(serializer.data)
-
-
-class UserCreateAPIView(CreateAPIView):
-    serializer_class = UserCreateSerializer
-    queryset = User.objects.all()
-    permission_classes = [AllowAny]
 
 
 class UserLogOutAPIView(APIView):
