@@ -45,31 +45,21 @@ class UserViewSet(viewsets.ModelViewSet):
             return UserDetailSerializer
 
     @list_route(methods=['POST'], permission_classes=[AllowAny])
-    def auth(self, request, *args, **kwargs):
-        register_serializer = UserCreateSerializer(data=request.data)
-        login_serializer = UserLoginSerializer(data=request.data)
-
-        if register_serializer.is_valid():
-            return self.register(register_serializer, request)
-        elif login_serializer.is_valid():
-            return self.login(request)
+    def register(self, request, *args, **kwargs):
+        serializer = UserCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            data = serializer.data
+            user_obj = User(
+                username=data['username'],
+                email=data['email']
+            )
+            user_obj.set_password(request.data['password'])
+            user_obj.save()
+            return Response({'status': 'User created', 'token': self.token(request)})
         else:
-            return Response(login_serializer.errors,
+            return Response(serializer.errors,
                             status=HTTP_400_BAD_REQUEST)
-
-    def login(self, request, *args, **kwargs):
-        return Response({'token': self.token(request)})
-
-    def register(self, serializer, request):
-        data = serializer.data
-        user_obj = User(
-            username=data['username'],
-            email=data['email']
-        )
-        user_obj.set_password(request.data['password'])
-        user_obj.save()
-        return Response({'status': 'User created'})
-
+        
     def token(self, request):
         jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
         jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
