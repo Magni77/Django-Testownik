@@ -82,3 +82,13 @@ class AnswerModel(models.Model):
         return self.answer
 
 
+codes = (
+    ('cp1250', 'Testownikowy'),
+    ('utf-8', 'UTF-8')
+    #  ('', 'Inny'),
+)
+
+
+class UploadFileModel(models.Model):
+    test_choice = models.ForeignKey(TestModel, default=1)
+    encoding = models.CharField(max_length=1, choices=codes)

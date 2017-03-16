@@ -1,8 +1,7 @@
-from string import ascii_lowercase, ascii_uppercase
-
+from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import InMemoryUploadedFile
-
 from .models import QuestionModel, AnswerModel
+from string import ascii_lowercase, ascii_uppercase
 
 
 class UploadHandler():
@@ -65,7 +64,7 @@ class UploadHandler():
                 self.img_dic.append(f)
                 self.img_names_dic.append(f.name[:-4])
             else:
-                print('wrong file ') #TODO exception handler
+                raise ValidationError('Incorrect file')
 
     def get_img(self, i, file):
         print(i)

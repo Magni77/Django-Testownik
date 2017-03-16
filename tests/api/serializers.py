@@ -5,17 +5,17 @@ from rest_framework.serializers import (ModelSerializer,
                                         FileField,
                                         ValidationError)
 from tests.models import TestModel, QuestionModel, AnswerModel
-#from learn.serializers import QuestionStatisticSerializer
-#from learn.models import QuestionStatistic
-from .models import UploadFileModel
+from tests.models import UploadFileModel
+from comments.models import CommentModel
+from comments.serializers import CommentDetailSerializer
 from django.conf import settings
 
 
 class UploadFileSerializer(ModelSerializer):
     files = ListField(
         child=FileField(max_length=100000,
-                                    allow_empty_file=False,
-                                    use_url=False)
+                        allow_empty_file=False,
+                        use_url=False)
     )
 
     class Meta:
@@ -55,6 +55,7 @@ class TestListSerializer(ModelSerializer):
 class TestSerializer(ModelSerializer):
     questions = SerializerMethodField()
     questions_count = SerializerMethodField()
+    comments = SerializerMethodField()
     #user = SerializerMethodField()
 
     class Meta:
@@ -66,8 +67,8 @@ class TestSerializer(ModelSerializer):
             'description',
             'questions_count',
             'is_public',
+            'comments',
             'questions',
-
         ]
 
     def get_questions(self, obj):
@@ -78,6 +79,10 @@ class TestSerializer(ModelSerializer):
     def get_questions_count(self, obj):
         qs = QuestionModel.objects.filter(test=obj.id)
         return len(qs)
+
+    def get_comments(self, obj):
+        qs = CommentModel.objects.filter(object_id=obj.id)
+        return CommentDetailSerializer(qs, many=True).data
 
     #def get_user(self, obj):
     #    return str(obj.user.username)

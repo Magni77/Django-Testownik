@@ -1,13 +1,17 @@
 from rest_framework.generics import (
     ListAPIView, CreateAPIView,
     RetrieveUpdateDestroyAPIView,
+    RetrieveAPIView,
+    ListCreateAPIView
     )
+from rest_framework.mixins import CreateModelMixin
+
 from rest_framework.views import APIView
 from rest_framework.parsers import FileUploadParser
 from tests.models import TestModel, QuestionModel, AnswerModel
 from .serializers import TestSerializer, TestListSerializer, QuestionSerializer, AnswerSerializer, UploadFileSerializer
 from rest_framework.response import Response
-from .models import UploadFileModel
+from tests.models import UploadFileModel
 from tests.upload_handler import UploadHandler
 from rest_framework.permissions import AllowAny
 
@@ -60,7 +64,7 @@ class TestUploadView(CreateAPIView):
     queryset = UploadFileModel
     serializer_class = UploadFileSerializer
 
-    def create(self, request, filename='22', format=None):
+    def create(self, request, filename=None, format=None):
         files = request.FILES.getlist('file')
 
         UploadHandler(request, files, request, is_rest=True)
@@ -68,3 +72,5 @@ class TestUploadView(CreateAPIView):
         # do some stuff with uploaded file
         # ...
         return Response(status=204)
+
+

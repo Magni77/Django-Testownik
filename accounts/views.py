@@ -64,8 +64,6 @@ class UserViewSet(viewsets.ModelViewSet):
         token = jwt_encode_handler(payload)
         return token
 
-
-
     @detail_route(methods=['POST'], permission_classes=[IsAuthenticatedOrReadOnly], url_path='change-password')
     def set_password(self, request, username=None):
         user = self.get_object()

@@ -36,6 +36,11 @@ class LearningSessionSerializer(ModelSerializer):
             QuestionStatistic.objects.create(question=question, **test_data)
         return learn_obj
 
+    def get_wrongs(self, obj):
+        qs = QuestionStatistic.objects.filter(learning_session=obj.id)
+        for q in qs:
+            a = q.replies-q.attempts
+
 
 class QuestionStatisticSerializer(ModelSerializer):
     question = QuestionSerializer()
@@ -62,7 +67,6 @@ class LearningSessionCreateSerializer(ModelSerializer):
     def create(self, validated_data):
         test = validated_data['test']
 
-       # test_data = validated_data.pop('test')
         learnSession = LearningSession.objects.create(**validated_data)
         questions_qs = QuestionModel.objects.filter(test=test)
         for question in questions_qs:

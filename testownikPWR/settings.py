@@ -42,11 +42,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tests',
-    'learn',
-    'rest_framework',
+
+    # 3rd party's apps
     'corsheaders',
-    'accounts'
+    'rest_framework',
+
+    # My apps
+    'accounts',
+    'comments',
+    'learn',
+    'tests',
 
 ]
 
@@ -96,7 +101,7 @@ REST_FRAMEWORK = {
 
 JWT_AUTH = {
     'JWT_ALLOW_REFRESH': True,
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=9900),
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=30),
    # 'JWT_RESPONSE_PAYLOAD_HANDLER': 'accounts.custom_jwt.jwt_response_payload_handler',
    # 'JWT_PAYLOAD_HANDLER': 'accounts.custom_jwt.jwt_payload_handler',
 }

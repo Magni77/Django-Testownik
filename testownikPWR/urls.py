@@ -26,7 +26,11 @@ urlpatterns = [
     url(r'^api/', include('tests.api.urls', namespace='tests-api')),
     url(r'^api/users/', include('accounts.urls', namespace='accounts-api')),
     url(r'^api/learn/', include('learn.urls', namespace='learn-api')),
-    url(r'^api/docs/', include_docs_urls(title='api-docs'))
+    url(r'^api/comments/', include('comments.urls', namespace='comments-api')),
+
+
+    url(r'^api/docs/', include_docs_urls(title='api-docs')),
+
 ]
 
 if settings.DEBUG:
