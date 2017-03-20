@@ -60,17 +60,19 @@ def test_list(request):
     return render(request, template, context)
 
 
-def task_create(request):
-    form = TestForm(request.POST or None)
-    context = {
-        "form": TestForm
-    }
-    if form.is_valid():
-        obj = form.save(commit=False)
-        obj.save()
-        context = {
-            'form': TestForm()
-        }
+# def task_create(request):
+#     form = TestForm(request.POST or None)
+#     context = {
+#         "form": TestForm
+#     }
+#     if form.is_valid():
+#         obj = form.save(commit=False)
+#         obj.save()
+#         context = {
+#             'form': TestForm()
+#         }
+#
+#     template = 'create_view.html'
+#     return render(request, template, context)
 
-    template = 'create_view.html'
-    return render(request, template, context)
+

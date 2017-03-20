@@ -1,5 +1,7 @@
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.core.validators import MinValueValidator, MaxValueValidator
+
 from django.db import models
 
 User = settings.AUTH_USER_MODEL
@@ -7,7 +9,6 @@ User = settings.AUTH_USER_MODEL
 
 def upload_location(instance, filename):
     return "%s/%s" %(instance.user, filename)
-
 
 # class TestMenager(models.ManyToManyField):
 #     def filter_by_instance(self, instance):
@@ -36,6 +37,14 @@ class TestModel(models.Model):
 
     def get_absolute_url(self):
         return reverse("tests", kwargs={"id": self.id})
+
+    @property
+    def mark(self):
+        qs =TestMarkModel.objects.filter(test=self.id)
+        sum = 0
+        for x in qs:
+            sum += x.mark
+        return sum / qs.count()
 
     def __unicode__(self):
         return self.title
@@ -92,3 +101,16 @@ codes = (
 class UploadFileModel(models.Model):
     test_choice = models.ForeignKey(TestModel, default=1)
     encoding = models.CharField(max_length=1, choices=codes)
+
+
+class TestSettingsModel(models.Model):
+    buffer = models.IntegerField()
+    replies = models.IntegerField()
+
+
+class TestMarkModel(models.Model):
+    user = models.ForeignKey(User)
+    mark = models.IntegerField(validators=[MinValueValidator(1),
+                                           MaxValueValidator(5)])
+
+    test = models.ForeignKey(TestModel, blank=True, related_name='testmark')

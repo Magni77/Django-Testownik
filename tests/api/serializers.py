@@ -2,10 +2,12 @@ from rest_framework.serializers import (ModelSerializer,
                                         Serializer,
                                         SerializerMethodField,
                                         ListField,
+                                        IntegerField,
+
                                         FileField,
                                         ValidationError)
-from tests.models import TestModel, QuestionModel, AnswerModel
-from tests.models import UploadFileModel
+from tests.models import TestModel, QuestionModel, AnswerModel, TestMarkModel
+from tests.models import UploadFileModel, TestMarkModel
 from comments.models import CommentModel
 from comments.serializers import CommentDetailSerializer
 from django.conf import settings
@@ -56,6 +58,7 @@ class TestSerializer(ModelSerializer):
     questions = SerializerMethodField()
     questions_count = SerializerMethodField()
     comments = SerializerMethodField()
+   # marks = SerializerMethodField()
     #user = SerializerMethodField()
 
     class Meta:
@@ -66,6 +69,7 @@ class TestSerializer(ModelSerializer):
             'title',
             'description',
             'questions_count',
+            'mark',
             'is_public',
             'comments',
             'questions',
@@ -83,9 +87,6 @@ class TestSerializer(ModelSerializer):
     def get_comments(self, obj):
         qs = CommentModel.objects.filter(object_id=obj.id)
         return CommentDetailSerializer(qs, many=True).data
-
-    #def get_user(self, obj):
-    #    return str(obj.user.username)
 
 
 class QuestionSerializer(ModelSerializer):
@@ -125,5 +126,10 @@ class AnswerSerializer(ModelSerializer):
             'answer',
             'img_answer',
             'is_correct'
-
         ]
+
+
+class MarkSerializer(ModelSerializer):
+    class Meta:
+        model = TestMarkModel
+        fields = ['mark']

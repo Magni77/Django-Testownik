@@ -25,16 +25,19 @@ class TestListAPIView(ListAPIView):
     serializer_class = CommentDetailSerializer
 
 
+def get_model_type(data):
+    if data == 'test':
+        return TestModel
+    elif data == 'question':
+        return QuestionModel
+
+
 class TestCommentCreateAPIView(ListCreateAPIView):
     queryset = CommentModel.objects.all()
     serializer_class = CommentDetailSerializer
 
     def list(self, request, *args, **kwargs):
-        if kwargs['type'] == 'test':
-            model = TestModel
-        elif kwargs['type'] == 'question':
-            model = QuestionModel
-        ct = ContentType.objects.get_for_model(model)
+        ct = ContentType.objects.get_for_model(get_model_type(kwargs['type']))
         queryset = CommentModel.objects.filter(object_id=kwargs['pk'], content_type=ct)
 
         return Response(CommentDetailSerializer(queryset, many=True).data)
@@ -44,15 +47,10 @@ class TestCommentCreateAPIView(ListCreateAPIView):
 
         if serializer.is_valid():
             data = serializer.data
-            if kwargs['type'] == 'test':
-                model = TestModel
-            elif kwargs['type'] == 'question':
-                model = QuestionModel
-            ct = ContentType.objects.get_for_model(model)
-
+            ct = ContentType.objects.get_for_model(get_model_type(kwargs['type']))
             obj = CommentModel(
                 user=request.user,
-                content= data['content'],
+                content=data['content'],
                 content_type=ct,
                 object_id=kwargs['pk']
             )
