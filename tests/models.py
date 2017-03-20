@@ -10,13 +10,6 @@ User = settings.AUTH_USER_MODEL
 def upload_location(instance, filename):
     return "%s/%s" %(instance.user, filename)
 
-# class TestMenager(models.ManyToManyField):
-#     def filter_by_instance(self, instance):
-#         content_type = QuestionModel.objects.get_for_model(instance.__class__)
-#         obj_id = instance.id
-#         qs = super(QuestionModel, self).filter(content_type=content_type, object_id=obj_id).filter(parent=None)
-#         return qs
-
 
 class TestModel(models.Model):
     user = models.ForeignKey(User, default=1)
