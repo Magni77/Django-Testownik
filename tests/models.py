@@ -33,11 +33,11 @@ class TestModel(models.Model):
 
     @property
     def mark(self):
-        qs =TestMarkModel.objects.filter(test=self.id)
-        sum = 0
-        for x in qs:
-            sum += x.mark
-        return sum / qs.count()
+        queryset = TestMarkModel.objects.filter(test=self.id)
+        qs = [x.mark for x in queryset]
+        if len(qs) > 0:
+            return sum(qs) / len(qs)
+        return 0
 
     def __unicode__(self):
         return self.title

@@ -80,10 +80,10 @@ class TestMarkAPIView(ListCreateAPIView):
 
     def list(self, request, *args, **kwargs):
         queryset = TestMarkModel.objects.filter(test=kwargs['pk'])
-        sum = 0
-        for x in queryset:
-            sum += x.mark
-        return Response({'average': sum / queryset.count()})
+        qs = [x.mark for x in queryset]
+        if len(qs) > 0:
+            return Response({'mark': sum(qs) / len(qs)})
+        return Response({'mark': 0})
 
     def create(self, request, *args, **kwargs):
         serializer = MarkSerializer(data=request.data)
