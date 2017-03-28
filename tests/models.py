@@ -20,10 +20,6 @@ class TestModel(models.Model):
     #TODO add test's rating
    # questions = models.ManyToManyField(QuestionModel, blank=True)
 
-    # @property
-    # def questions(self):
-    #     return QuestionModel.objects.first()
-
     class Meta:
         verbose_name = 'Test'
         verbose_name_plural = 'Tests'
@@ -50,10 +46,8 @@ class QuestionModel(models.Model):
     user = models.ForeignKey(User, default=1)
     question = models.CharField(max_length=500, blank=True, null=True)
     img_question = models.ImageField(upload_to=upload_location, blank=True, null=True)
-   # answers = models.ForeignKey(AnswerModel, blank=True)
-    #answers = models.ManyToManyField(AnswerModel, blank=True)
     hint = models.TextField(blank=True, null=True)
-    test = models.ForeignKey(TestModel, default=1)
+    test = models.ForeignKey(TestModel, related_name='questions', default=1)
 
     class Meta:
         verbose_name = 'Question'

@@ -1,16 +1,12 @@
 from rest_framework.serializers import (ModelSerializer,
-                                        Serializer,
                                         SerializerMethodField,
                                         ListField,
-                                        IntegerField,
+                                        FileField)
 
-                                        FileField,
-                                        ValidationError)
-from tests.models import TestModel, QuestionModel, AnswerModel, TestMarkModel
-from tests.models import UploadFileModel, TestMarkModel
 from comments.models import CommentModel
 from comments.serializers import CommentDetailSerializer
-from django.conf import settings
+from tests.models import TestModel, QuestionModel, AnswerModel
+from tests.models import UploadFileModel, TestMarkModel
 
 
 class UploadFileSerializer(ModelSerializer):
@@ -54,41 +50,6 @@ class TestListSerializer(ModelSerializer):
         return len(qs)
 
 
-class TestSerializer(ModelSerializer):
-    questions = SerializerMethodField()
-    questions_count = SerializerMethodField()
-    comments = SerializerMethodField()
-   # marks = SerializerMethodField()
-    #user = SerializerMethodField()
-
-    class Meta:
-        model = TestModel
-        fields = [
-            'id',
-            'user',
-            'title',
-            'description',
-            'questions_count',
-            'mark',
-            'is_public',
-            'comments',
-            'questions',
-        ]
-
-    def get_questions(self, obj):
-        qs = QuestionModel.objects.filter(test=obj.id) #filter(content_type = obj.__class__)
-        questions = QuestionSerializer(qs, many=True).data
-        return questions
-
-    def get_questions_count(self, obj):
-        qs = QuestionModel.objects.filter(test=obj.id)
-        return len(qs)
-
-    def get_comments(self, obj):
-        qs = CommentModel.objects.filter(object_id=obj.id)
-        return CommentDetailSerializer(qs, many=True).data
-
-
 class QuestionSerializer(ModelSerializer):
     answers = SerializerMethodField()
 
@@ -112,6 +73,45 @@ class QuestionSerializer(ModelSerializer):
         qs = AnswerModel.objects.filter(question=obj.id) #filter(content_type = obj.__class__)
         answers = AnswerSerializer(qs, many=True).data
         return answers
+
+
+class TestSerializer(ModelSerializer):
+   # questions = SerializerMethodField()
+    questions_count = SerializerMethodField()
+    comments = SerializerMethodField()
+ #   questions = StringRelatedField(many=True)
+    questions = QuestionSerializer(many=True, read_only=True)
+
+   # marks = SerializerMethodField()
+    #user = SerializerMethodField()
+
+    class Meta:
+        model = TestModel
+        fields = [
+            'id',
+            'user',
+            'title',
+            'description',
+            'questions_count',
+            'mark',
+            'is_public',
+            'comments',
+            'questions',
+
+        ]
+
+    def get_questions(self, obj):
+        qs = QuestionModel.objects.filter(test=obj.id) #filter(content_type = obj.__class__)
+        questions = QuestionSerializer(qs, many=True).data
+        return questions
+
+    def get_questions_count(self, obj):
+        qs = QuestionModel.objects.filter(test=obj.id)
+        return len(qs)
+
+    def get_comments(self, obj):
+        qs = CommentModel.objects.filter(object_id=obj.id)
+        return CommentDetailSerializer(qs, many=True).data
 
 
 class AnswerSerializer(ModelSerializer):

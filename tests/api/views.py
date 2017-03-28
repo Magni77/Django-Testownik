@@ -1,19 +1,15 @@
 from rest_framework.generics import (
     ListAPIView, CreateAPIView,
     RetrieveUpdateDestroyAPIView,
-    RetrieveAPIView,
     ListCreateAPIView,
     )
-from rest_framework.mixins import CreateModelMixin
-
-from rest_framework.views import APIView
-from rest_framework.parsers import FileUploadParser
-from tests.models import TestModel, QuestionModel, AnswerModel, TestMarkModel
-from .serializers import TestSerializer, TestListSerializer, QuestionSerializer, AnswerSerializer, UploadFileSerializer, MarkSerializer
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+
+from tests.models import TestModel, QuestionModel, AnswerModel, TestMarkModel
 from tests.models import UploadFileModel
 from tests.upload_handler import UploadHandler
-from rest_framework.permissions import AllowAny
+from .serializers import TestSerializer, TestListSerializer, QuestionSerializer, AnswerSerializer, UploadFileSerializer, MarkSerializer
 
 
 class TestListAPIView(ListAPIView):
@@ -22,9 +18,9 @@ class TestListAPIView(ListAPIView):
     permission_classes = [AllowAny]
 
 
-class QuestionListAPIView(ListAPIView):
-    queryset = QuestionModel.objects.all()
-    serializer_class = QuestionSerializer
+# class QuestionListAPIView(ListAPIView):
+#     queryset = QuestionModel.objects.all()
+#     serializer_class = QuestionSerializer
 
 
 #details
@@ -33,9 +29,9 @@ class TestDetailAPIView(RetrieveUpdateDestroyAPIView):
     serializer_class = TestSerializer
 
 
-class QuestionDetailAPIView(RetrieveUpdateDestroyAPIView):
-    queryset = QuestionModel.objects.all()
-    serializer_class = QuestionSerializer
+# class QuestionDetailAPIView(RetrieveUpdateDestroyAPIView):
+#     queryset = QuestionModel.objects.all()
+#     serializer_class = QuestionSerializer
 
 
 class AnswerDetailAPIView(RetrieveUpdateDestroyAPIView):
@@ -101,3 +97,18 @@ class TestMarkAPIView(ListCreateAPIView):
         else:
             return Response(serializer.errors) #,
                             #status=HTTP_400_BAD_REQUEST)
+
+
+class QuestionListAPIView(ListAPIView):
+    serializer_class = QuestionSerializer
+
+    def get_queryset(self):
+        print(self.kwargs.get('pk'))
+        return QuestionModel.objects.filter(test=self.kwargs.get('pk'))
+
+
+class QuestionDetailAPIView(RetrieveUpdateDestroyAPIView):
+    serializer_class = QuestionSerializer
+
+    def get_queryset(self):
+        return QuestionModel.objects.filter(id=self.kwargs.get('question_id'))
