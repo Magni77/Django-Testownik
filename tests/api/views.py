@@ -34,9 +34,9 @@ class TestDetailAPIView(RetrieveUpdateDestroyAPIView):
 #     serializer_class = QuestionSerializer
 
 
-class AnswerDetailAPIView(RetrieveUpdateDestroyAPIView):
-    queryset = AnswerModel.objects.all()
-    serializer_class = AnswerSerializer
+# class AnswerDetailAPIView(RetrieveUpdateDestroyAPIView):
+#     queryset = AnswerModel.objects.all()
+#     serializer_class = AnswerSerializer
 
 
 #create views
@@ -112,3 +112,17 @@ class QuestionDetailAPIView(RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return QuestionModel.objects.filter(id=self.kwargs.get('question_id'))
+
+
+class AnswersListAPIView(ListAPIView):
+    serializer_class = AnswerSerializer
+
+    def get_queryset(self):
+        return AnswerModel.objects.filter(question=self.kwargs.get('question_id'))
+
+
+class AnswerDetailAPIView(RetrieveUpdateDestroyAPIView):
+    serializer_class = AnswerSerializer
+
+    def get_queryset(self):
+        return AnswerModel.objects.filter(id=self.kwargs.get('answer_id'))

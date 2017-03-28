@@ -5,7 +5,7 @@ from .views import (
     TestListAPIView, QuestionListAPIView,
     TestDetailAPIView, QuestionDetailAPIView, AnswerDetailAPIView,
     TestCreateAPIView, QuestionCreateAPIView, AnswerCreateAPIView,
-    TestUploadView, TestMarkAPIView
+    TestUploadView, TestMarkAPIView, AnswersListAPIView
     )
 
 
@@ -17,6 +17,9 @@ tests_patterns = [
 
     url(r'^(?P<pk>\d+)/questions/$', QuestionListAPIView.as_view()),
     url(r'^(?P<pk>\d+)/questions/(?P<question_id>\d+)/$', QuestionDetailAPIView.as_view()),
+
+    url(r'^(?P<pk>\d+)/questions/(?P<question_id>\d+)/answers/$', AnswersListAPIView.as_view()),
+    url(r'^(?P<pk>\d+)/questions/(?P<question_id>\d+)/answers/(?P<answer_id>\d+)/$', AnswerDetailAPIView.as_view()),
 
     url(r'^(?P<pk>\d+)/comments/$', TestCommentCreateAPIView.as_view(),
         {'type': 'test'}, name='test-comments'),
@@ -31,7 +34,7 @@ urlpatterns = [
     url(r'^questions/create/', QuestionCreateAPIView.as_view(), name='createQuestion'),
     url(r'^answers/create', AnswerCreateAPIView.as_view(), name='createAnswer'),
 
-    url(r'^answers/(?P<pk>\d+)/$', AnswerDetailAPIView.as_view(), name='answerDetail'),
+  #  url(r'^answers/(?P<pk>\d+)/$', AnswerDetailAPIView.as_view(), name='answerDetail'),
 
     url(r'^upload/$', TestUploadView.as_view(), name='upload'),
 
