@@ -5,14 +5,14 @@
 {% for test in object_list %}
     <h1>{{ test.title }}</h1>
 
-    {% for question in test.questionmodel_set.all %}
+    {% for question in test.questions.all %}
 
         {% if question.img_question %}
             <img src="{{ question.img_question.url }}" class="img-responsive">
         {% else %}
             <h3>{{ question.question }}</h3>
         {%  endif %}
-        {% for ans in question.answermodel_set.all %}
+        {% for ans in question.answers.all %}
             {% if ans.img_answer %}
                 <img src="{{ ans.img_answer.url }}" class="img-responsive">
             {% else %}
