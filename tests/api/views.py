@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework.generics import (
     ListAPIView, CreateAPIView,
     RetrieveUpdateDestroyAPIView,
@@ -103,7 +104,6 @@ class QuestionListAPIView(ListAPIView):
     serializer_class = QuestionSerializer
 
     def get_queryset(self):
-        print(self.kwargs.get('pk'))
         return QuestionModel.objects.filter(test=self.kwargs.get('pk'))
 
 
@@ -111,7 +111,11 @@ class QuestionDetailAPIView(RetrieveUpdateDestroyAPIView):
     serializer_class = QuestionSerializer
 
     def get_queryset(self):
-        return QuestionModel.objects.filter(id=self.kwargs.get('question_id'))
+        return QuestionModel.objects.filter(test=self.kwargs.get('pk'))
+
+    def get_object(self):
+        obj = get_object_or_404(self.get_queryset(), id=self.kwargs.get('question_id'))
+        return obj
 
 
 class AnswersListAPIView(ListAPIView):
@@ -123,6 +127,12 @@ class AnswersListAPIView(ListAPIView):
 
 class AnswerDetailAPIView(RetrieveUpdateDestroyAPIView):
     serializer_class = AnswerSerializer
+    queryset = AnswerModel
 
     def get_queryset(self):
-        return AnswerModel.objects.filter(id=self.kwargs.get('answer_id'))
+        return AnswerModel.objects.filter(question=self.kwargs.get('question_id'))
+
+    def get_object(self):
+        qs = self.get_queryset()
+        obj = get_object_or_404(qs, id=self.kwargs.get('answer_id'))
+        return obj
