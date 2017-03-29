@@ -125,7 +125,8 @@ class AnswerSerializer(ModelSerializer):
             'id',
             'answer',
             'img_answer',
-            'is_correct'
+            'is_correct',
+            'question'
         ]
 
 

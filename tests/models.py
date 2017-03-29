@@ -47,7 +47,7 @@ class QuestionModel(models.Model):
     question = models.CharField(max_length=500, blank=True, null=True)
     img_question = models.ImageField(upload_to=upload_location, blank=True, null=True)
     hint = models.TextField(blank=True, null=True)
-    test = models.ForeignKey(TestModel, related_name='questions', default=1)
+    test = models.ForeignKey(TestModel, related_name='questions')
 
     class Meta:
         verbose_name = 'Question'

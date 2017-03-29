@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from rest_framework import status
 from rest_framework.generics import (
     ListAPIView, CreateAPIView,
     RetrieveUpdateDestroyAPIView,
@@ -10,7 +11,8 @@ from rest_framework.response import Response
 from tests.models import TestModel, QuestionModel, AnswerModel, TestMarkModel
 from tests.models import UploadFileModel
 from tests.upload_handler import UploadHandler
-from .serializers import TestSerializer, TestListSerializer, QuestionSerializer, AnswerSerializer, UploadFileSerializer, MarkSerializer
+from .serializers import TestSerializer, TestListSerializer, \
+    QuestionSerializer, AnswerSerializer, UploadFileSerializer, MarkSerializer
 
 
 class TestListAPIView(ListAPIView):
@@ -19,25 +21,10 @@ class TestListAPIView(ListAPIView):
     permission_classes = [AllowAny]
 
 
-# class QuestionListAPIView(ListAPIView):
-#     queryset = QuestionModel.objects.all()
-#     serializer_class = QuestionSerializer
-
-
 #details
 class TestDetailAPIView(RetrieveUpdateDestroyAPIView):
     queryset = TestModel.objects.all()
     serializer_class = TestSerializer
-
-
-# class QuestionDetailAPIView(RetrieveUpdateDestroyAPIView):
-#     queryset = QuestionModel.objects.all()
-#     serializer_class = QuestionSerializer
-
-
-# class AnswerDetailAPIView(RetrieveUpdateDestroyAPIView):
-#     queryset = AnswerModel.objects.all()
-#     serializer_class = AnswerSerializer
 
 
 #create views
@@ -94,17 +81,25 @@ class TestMarkAPIView(ListCreateAPIView):
                 mark=data['mark']
             )
             obj.save()
-            return Response({'status': 'created'})#, status=HTTP_201_CREATED)
+            return Response({'status': 'created'})
         else:
-            return Response(serializer.errors) #,
-                            #status=HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors)
 
 
-class QuestionListAPIView(ListAPIView):
+class QuestionListAPIView(ListCreateAPIView):
     serializer_class = QuestionSerializer
 
     def get_queryset(self):
         return QuestionModel.objects.filter(test=self.kwargs.get('pk'))
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        data['test'] = self.kwargs.get('pk')
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class QuestionDetailAPIView(RetrieveUpdateDestroyAPIView):
@@ -118,11 +113,20 @@ class QuestionDetailAPIView(RetrieveUpdateDestroyAPIView):
         return obj
 
 
-class AnswersListAPIView(ListAPIView):
+class AnswersListAPIView(ListCreateAPIView):
     serializer_class = AnswerSerializer
 
     def get_queryset(self):
         return AnswerModel.objects.filter(question=self.kwargs.get('question_id'))
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        data['question'] = self.kwargs.get('question_id')
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class AnswerDetailAPIView(RetrieveUpdateDestroyAPIView):
