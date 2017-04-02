@@ -126,8 +126,9 @@ class AnswerSerializer(ModelSerializer):
             'answer',
             'img_answer',
             'is_correct',
-            'question'
+      #      'question'
         ]
+        read_only = ['question']
 
 
 class MarkSerializer(ModelSerializer):

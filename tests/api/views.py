@@ -92,14 +92,11 @@ class QuestionListAPIView(ListCreateAPIView):
     def get_queryset(self):
         return QuestionModel.objects.filter(test=self.kwargs.get('pk'))
 
-    def create(self, request, *args, **kwargs):
-        data = request.data
-        data['test'] = self.kwargs.get('pk')
-        serializer = self.get_serializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    def perform_create(self, serializer):
+        test_obj = get_object_or_404(TestModel, id=self.kwargs.get('pk'))
+        serializer.save(
+            test=test_obj
+        )
 
 
 class QuestionDetailAPIView(RetrieveUpdateDestroyAPIView):
@@ -119,14 +116,11 @@ class AnswersListAPIView(ListCreateAPIView):
     def get_queryset(self):
         return AnswerModel.objects.filter(question=self.kwargs.get('question_id'))
 
-    def create(self, request, *args, **kwargs):
-        data = request.data
-        data['question'] = self.kwargs.get('question_id')
-        serializer = self.get_serializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    def perform_create(self, serializer):
+        question_obj = get_object_or_404(QuestionModel, id=self.kwargs.get('question_id'))
+        serializer.save(
+            question=question_obj
+        )
 
 
 class AnswerDetailAPIView(RetrieveUpdateDestroyAPIView):
