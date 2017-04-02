@@ -3,6 +3,7 @@ from rest_framework.serializers import (ModelSerializer,
                                         ListField,
                                         FileField,
                                         ReadOnlyField)
+from rest_framework import serializers
 
 from comments.models import CommentModel
 from comments.serializers import CommentDetailSerializer
@@ -130,6 +131,9 @@ class AnswerSerializer(ModelSerializer):
 
 
 class MarkSerializer(ModelSerializer):
+    user = ReadOnlyField(source='user.username')
+
     class Meta:
         model = TestMarkModel
-        fields = ['mark']
+        fields = ['user', 'mark']
+

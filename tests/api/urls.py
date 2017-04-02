@@ -5,7 +5,7 @@ from .views import (
     TestListAPIView, QuestionListAPIView,
     TestDetailAPIView, QuestionDetailAPIView, AnswerDetailAPIView,
     TestCreateAPIView, QuestionCreateAPIView, AnswerCreateAPIView,
-    TestUploadView, TestMarkAPIView, AnswersListAPIView
+    TestUploadView, TestMarkAPIView, AnswersListAPIView, AverageMarkAPIView
     )
 
 
@@ -24,6 +24,7 @@ tests_patterns = [
     url(r'^(?P<pk>\d+)/comments/$', TestCommentCreateAPIView.as_view(),
         {'type': 'test'}, name='test-comments'),
     url(r'^(?P<pk>\d+)/mark/$', TestMarkAPIView.as_view(), {'type': 'test'}, name='test-marks'),
+    url(r'^(?P<pk>\d+)/mark/average/$', AverageMarkAPIView.as_view(), name='average-marks'),
 
 ]
 

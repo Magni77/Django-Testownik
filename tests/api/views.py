@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import status
+from rest_framework.exceptions import ValidationError
 from rest_framework.generics import (
     ListAPIView, CreateAPIView,
     RetrieveUpdateDestroyAPIView,
@@ -7,6 +8,7 @@ from rest_framework.generics import (
     )
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from tests.models import TestModel, QuestionModel, AnswerModel, TestMarkModel
 from tests.models import UploadFileModel
@@ -68,31 +70,33 @@ class TestUploadView(CreateAPIView):
 
 
 class TestMarkAPIView(ListCreateAPIView):
-    queryset = TestMarkModel.objects.all()
+ #   queryset = TestMarkModel.objects.all()
     serializer_class = MarkSerializer
 
-    def list(self, request, *args, **kwargs):
-        queryset = TestMarkModel.objects.filter(test=kwargs['pk'])
+    def get_queryset(self):
+        return TestMarkModel.objects.filter(test=self.kwargs['pk'])
+
+    def perform_create(self, serializer):
+        test_obj = get_object_or_404(TestModel, id=self.kwargs.get('pk'))
+        qs = TestMarkModel.objects.filter(user=self.request.user, test=test_obj)
+
+        if len(qs) == 0:
+            serializer.save(
+                user=self.request.user,
+                test=test_obj
+            )
+        else:
+            raise ValidationError("User can mark's only once")
+
+
+class AverageMarkAPIView(APIView):
+
+    def get(self, request, pk=None, format=None):
+        queryset = TestMarkModel.objects.filter(test=pk)
         qs = [x.mark for x in queryset]
         if len(qs) > 0:
             return Response({'mark': sum(qs) / len(qs)})
         return Response({'mark': 0})
-
-    def create(self, request, *args, **kwargs):
-        serializer = MarkSerializer(data=request.data)
-
-        if serializer.is_valid():
-            data = serializer.data
-            test = TestModel.objects.filter(id=kwargs['pk'])
-            obj = TestMarkModel(
-                user=request.user,
-                test=test.first(),
-                mark=data['mark']
-            )
-            obj.save()
-            return Response({'status': 'created'})
-        else:
-            return Response(serializer.errors)
 
 
 class QuestionListAPIView(ListCreateAPIView):
