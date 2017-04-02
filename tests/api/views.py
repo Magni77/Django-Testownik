@@ -15,10 +15,15 @@ from .serializers import TestSerializer, TestListSerializer, \
     QuestionSerializer, AnswerSerializer, UploadFileSerializer, MarkSerializer
 
 
-class TestListAPIView(ListAPIView):
+class TestListAPIView(ListCreateAPIView):
     queryset = TestModel.objects.all()
     serializer_class = TestListSerializer
     permission_classes = [AllowAny]
+
+    def perform_create(self, serializer):
+        serializer.save(
+            user=self.request.user,
+        )
 
 
 #details
@@ -31,7 +36,11 @@ class TestDetailAPIView(RetrieveUpdateDestroyAPIView):
 class TestCreateAPIView(CreateAPIView):
     queryset = TestModel.objects.all()
     serializer_class = TestSerializer
-    #authentication_classes = TokenAuthentication
+
+    def perform_create(self, serializer):
+        serializer.save(
+            user=self.request.user,
+        )
 
 
 class QuestionCreateAPIView(CreateAPIView):
@@ -95,6 +104,7 @@ class QuestionListAPIView(ListCreateAPIView):
     def perform_create(self, serializer):
         test_obj = get_object_or_404(TestModel, id=self.kwargs.get('pk'))
         serializer.save(
+            user=self.request.user,
             test=test_obj
         )
 
@@ -119,6 +129,7 @@ class AnswersListAPIView(ListCreateAPIView):
     def perform_create(self, serializer):
         question_obj = get_object_or_404(QuestionModel, id=self.kwargs.get('question_id'))
         serializer.save(
+            user=self.request.user,
             question=question_obj
         )
 

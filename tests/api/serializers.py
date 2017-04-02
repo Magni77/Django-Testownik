@@ -1,7 +1,8 @@
 from rest_framework.serializers import (ModelSerializer,
                                         SerializerMethodField,
                                         ListField,
-                                        FileField)
+                                        FileField,
+                                        ReadOnlyField)
 
 from comments.models import CommentModel
 from comments.serializers import CommentDetailSerializer
@@ -29,6 +30,7 @@ class TestListSerializer(ModelSerializer):
   #       view_name='tests-api:testDetail')
    # user = UserBasicDetailsSerializer()
     questions_count = SerializerMethodField()
+    user = ReadOnlyField(source='user.username')
 
     class Meta:
         model = TestModel
@@ -76,14 +78,10 @@ class QuestionSerializer(ModelSerializer):
 
 
 class TestSerializer(ModelSerializer):
-   # questions = SerializerMethodField()
     questions_count = SerializerMethodField()
     comments = SerializerMethodField()
- #   questions = StringRelatedField(many=True)
     questions = QuestionSerializer(many=True, read_only=True)
-
-   # marks = SerializerMethodField()
-    #user = SerializerMethodField()
+    user = ReadOnlyField(source='user.username')
 
     class Meta:
         model = TestModel
