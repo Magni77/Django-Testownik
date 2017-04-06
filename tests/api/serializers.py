@@ -27,9 +27,6 @@ class UploadFileSerializer(ModelSerializer):
 
 
 class TestListSerializer(ModelSerializer):
-  #  url = HyperlinkedIdentityField(
-  #       view_name='tests-api:testDetail')
-   # user = UserBasicDetailsSerializer()
     questions_count = SerializerMethodField()
     user = ReadOnlyField(source='user.username')
 
@@ -44,20 +41,31 @@ class TestListSerializer(ModelSerializer):
             'questions_count',
             'is_public',
         ]
-    #
-    # def get_user(self, obj):
-    #     return str(obj.user.username)
 
     def get_questions_count(self, obj):
         qs = QuestionModel.objects.filter(test=obj.id)
         return len(qs)
 
 
-class QuestionSerializer(ModelSerializer):
-    answers = SerializerMethodField()
+class AnswerSerializer(ModelSerializer):
+   ##     view_name='tests-api:answerDetail')
 
-   # url = HyperlinkedIdentityField(
-   #     view_name='tests-api:questionDetail')
+    class Meta:
+        model = AnswerModel
+
+        fields = [
+           # 'url',
+            'id',
+            'answer',
+            'img_answer',
+            'is_correct',
+      #      'question'
+        ]
+        read_only = ['question']
+
+
+class QuestionSerializer(ModelSerializer):
+    answers = AnswerSerializer(many=True, read_only=True)
 
     class Meta:
         model = QuestionModel
@@ -72,10 +80,17 @@ class QuestionSerializer(ModelSerializer):
 
         ]
 
-    def get_answers(self, obj):
-        qs = AnswerModel.objects.filter(question=obj.id) #filter(content_type = obj.__class__)
-        answers = AnswerSerializer(qs, many=True).data
-        return answers
+
+class QuestionDetailSerializer(ModelSerializer):
+
+    class Meta:
+        model = QuestionModel
+        fields = [
+            'id',
+            'question',
+            'img_question',
+            'hint',
+        ]
 
 
 class TestSerializer(ModelSerializer):
@@ -111,23 +126,6 @@ class TestSerializer(ModelSerializer):
     def get_comments(self, obj):
         qs = CommentModel.objects.filter(object_id=obj.id)
         return CommentDetailSerializer(qs, many=True).data
-
-
-class AnswerSerializer(ModelSerializer):
-   ##     view_name='tests-api:answerDetail')
-
-    class Meta:
-        model = AnswerModel
-
-        fields = [
-           # 'url',
-            'id',
-            'answer',
-            'img_answer',
-            'is_correct',
-      #      'question'
-        ]
-        read_only = ['question']
 
 
 class MarkSerializer(ModelSerializer):

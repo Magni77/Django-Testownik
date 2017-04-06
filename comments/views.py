@@ -38,7 +38,10 @@ class TestCommentCreateAPIView(ListCreateAPIView):
 
     def list(self, request, *args, **kwargs):
         ct = ContentType.objects.get_for_model(get_model_type(kwargs['type']))
-        queryset = CommentModel.objects.filter(object_id=kwargs['pk'], content_type=ct)
+        queryset = CommentModel.objects.filter(
+            object_id=kwargs['pk'],
+            content_type=ct
+        )
 
         return Response(CommentDetailSerializer(queryset, many=True).data)
 

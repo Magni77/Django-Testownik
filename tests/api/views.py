@@ -14,7 +14,8 @@ from tests.models import TestModel, QuestionModel, AnswerModel, TestMarkModel
 from tests.models import UploadFileModel
 from tests.upload_handler import UploadHandler
 from .serializers import TestSerializer, TestListSerializer, \
-    QuestionSerializer, AnswerSerializer, UploadFileSerializer, MarkSerializer
+    QuestionSerializer, AnswerSerializer, UploadFileSerializer, \
+    MarkSerializer, QuestionDetailSerializer
 
 
 class TestListAPIView(ListCreateAPIView):
@@ -28,13 +29,13 @@ class TestListAPIView(ListCreateAPIView):
         )
 
 
-#details
+# details
 class TestDetailAPIView(RetrieveUpdateDestroyAPIView):
     queryset = TestModel.objects.all()
     serializer_class = TestSerializer
 
 
-#create views
+# create views
 class TestCreateAPIView(CreateAPIView):
     queryset = TestModel.objects.all()
     serializer_class = TestSerializer
@@ -70,7 +71,7 @@ class TestUploadView(CreateAPIView):
 
 
 class TestMarkAPIView(ListCreateAPIView):
- #   queryset = TestMarkModel.objects.all()
+    #   queryset = TestMarkModel.objects.all()
     serializer_class = MarkSerializer
 
     def get_queryset(self):
@@ -78,7 +79,8 @@ class TestMarkAPIView(ListCreateAPIView):
 
     def perform_create(self, serializer):
         test_obj = get_object_or_404(TestModel, id=self.kwargs.get('pk'))
-        qs = TestMarkModel.objects.filter(user=self.request.user, test=test_obj)
+        qs = TestMarkModel.objects.filter(user=self.request.user,
+                                          test=test_obj)
 
         if len(qs) == 0:
             serializer.save(
@@ -100,6 +102,7 @@ class AverageMarkAPIView(APIView):
 
 
 class QuestionListAPIView(ListCreateAPIView):
+    """Returns list of questions to specific test"""
     serializer_class = QuestionSerializer
 
     def get_queryset(self):
@@ -114,13 +117,14 @@ class QuestionListAPIView(ListCreateAPIView):
 
 
 class QuestionDetailAPIView(RetrieveUpdateDestroyAPIView):
-    serializer_class = QuestionSerializer
+    serializer_class = QuestionDetailSerializer
 
     def get_queryset(self):
         return QuestionModel.objects.filter(test=self.kwargs.get('pk'))
 
     def get_object(self):
-        obj = get_object_or_404(self.get_queryset(), id=self.kwargs.get('question_id'))
+        obj = get_object_or_404(self.get_queryset(),
+                                id=self.kwargs.get('question_id'))
         return obj
 
 
@@ -128,10 +132,13 @@ class AnswersListAPIView(ListCreateAPIView):
     serializer_class = AnswerSerializer
 
     def get_queryset(self):
-        return AnswerModel.objects.filter(question=self.kwargs.get('question_id'))
+        return AnswerModel.objects.filter(
+            question=self.kwargs.get('question_id')
+        )
 
     def perform_create(self, serializer):
-        question_obj = get_object_or_404(QuestionModel, id=self.kwargs.get('question_id'))
+        question_obj = get_object_or_404(QuestionModel,
+                                         id=self.kwargs.get('question_id'))
         serializer.save(
             user=self.request.user,
             question=question_obj
@@ -143,7 +150,9 @@ class AnswerDetailAPIView(RetrieveUpdateDestroyAPIView):
     queryset = AnswerModel
 
     def get_queryset(self):
-        return AnswerModel.objects.filter(question=self.kwargs.get('question_id'))
+        return AnswerModel.objects.filter(
+            question=self.kwargs.get('question_id')
+        )
 
     def get_object(self):
         qs = self.get_queryset()
