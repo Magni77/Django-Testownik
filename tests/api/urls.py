@@ -20,7 +20,7 @@ questions_patterns = [
 
 tests_patterns = [
     url(r'^$', PublicTestListAPIView.as_view(), name='list'),
-    url(r'^private$', PrivateTestListAPIView.as_view(), name='private-list'),
+    url(r'^private/$', PrivateTestListAPIView.as_view(), name='private-list'),
 
     url(r'^(?P<pk>\d+)/questions/', include(questions_patterns),
         name='questions_url'),
