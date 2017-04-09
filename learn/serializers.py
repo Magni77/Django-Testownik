@@ -11,6 +11,7 @@ from .models import LearningSession, QuestionStatistic
 class LearningSessionSerializer(ModelSerializer):
    # test = TestListSerializer()
     statistics = SerializerMethodField()
+    correct_answers = SerializerMethodField()
 
     class Meta:
         model = LearningSession
@@ -42,6 +43,13 @@ class LearningSessionSerializer(ModelSerializer):
         qs = QuestionStatistic.objects.filter(learning_session=obj.id)
         for q in qs:
             a = q.replies-q.attempts
+
+    def get_correct_answers(self, obj):
+        amount = 0
+        qs = QuestionStatistic.objects.filter(learning_session=obj.id)
+        for q in qs:
+            amount += q.correct_answers
+        return amount
 
 
 class QuestionStatisticSerializer(ModelSerializer):

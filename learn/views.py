@@ -15,46 +15,6 @@ from .serializers import (LearningSessionListSerializer,
 User = get_user_model()
 
 
-class LearningSessionViewSet(viewsets.ModelViewSet):
-    """
-    Functionality to save user's learning statistic's
-    Everyone can only have one active learning session.
-
-    list:
-    logged user learning sessions
-
-
-
-    """
- #   serializer_class = LearningSessionSerializer
-    queryset = LearningSession.objects.all()
-
-    def get_serializer_class(self):
-        if self.action in ('list'):
-            return LearningSessionListSerializer
-        elif self.action in ('create', 'update', 'partial_update'):
-            return LearningSessionCreateSerializer
-        else:
-            return LearningSessionSerializer
-
-    def get_queryset(self):
-        user = self.request.user
-        return user.learningsession_set.all()
-
-    @detail_route()
-    def statistics(self, request, pk=None):
-        qs = QuestionStatistic.objects.filter(learning_session=pk)
-        serializer = QuestionStatisticSerializer(qs, many=True)
-        return Response(serializer.data)
-
-    # def create(self, request, *args, **kwargs):
-    #     data = request.data
-    #    # print(self.get_object())
-    #    # serializer = QuestionStatisticSerializer
-    #     print(data)
-    #     return Response({'status': 'password set'})
-
-
 class LearningSessionListAPIView(generics.ListCreateAPIView):
     serializer_class = LearningSessionCreateSerializer
 

@@ -1,16 +1,9 @@
 from django.conf.urls import url
 from django.contrib.auth import get_user_model
-from rest_framework import routers
 from . import views
-# from .views import (
-#     LearningSessionViewSet,
-#     LearningSessionListAPIView
-#     )
+
 
 User = get_user_model()
-#
-# router = routers.SimpleRouter()
-# router.register(r'', LearningSessionViewSet)
 
 urlpatterns = [
      url(r'^$', views.LearningSessionListAPIView.as_view(), name='learn-list'),
@@ -26,5 +19,3 @@ urlpatterns = [
     # url(r'^(?P<pk>\d+)/$', LearningSessionListAPIView.as_view(), name='learn-list'),
 
 ]
-
-#urlpatterns += router.urls

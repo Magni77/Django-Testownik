@@ -19,21 +19,22 @@ class LearningSession(models.Model):
     created = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
     is_active = models.BooleanField(default=True)
-    wrong_answers = models.IntegerField(default=0)
-    correct_answers = models.IntegerField(default=0)
 
+    @property
+    def wrong_answers(self):
+        amount = 0
+        qs = QuestionStatistic.objects.filter(learning_session=self.id)
+        for q in qs:
+            amount += q.wrong_answers
+        return amount
 
-
-          #  obj.save()
-    # def clean(self):
-    #     user_qs = LearningSession.objects.filter(user=self.user)
-    #     #print(dir(user_qs.first().user))
-    #     if len(user_qs) > 0:
-    #         if self.user == user_qs.first().user:
-    #             if self.test == user_qs.first().test:
-    #                 raise ValidationError("This user has already.")
-    #  #   print(user_qs.first().user)
-    #  #   print(self.user)
+    @property
+    def correct_answers(self):
+        amount = 0
+        qs = QuestionStatistic.objects.filter(learning_session=self.id)
+        for q in qs:
+            amount += q.correct_answers
+        return amount
 
     def __str__(self):
         return "{} session {}".format(self.user, self.test)
@@ -62,4 +63,5 @@ class QuestionStatistic(models.Model):
                     raise ValidationError("This question is alredy in session.")
 
     def __str__(self):
+
         return "{}  {}".format(self.question, self.learning_session)
