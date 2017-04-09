@@ -1,5 +1,7 @@
 from rest_framework.serializers import (ModelSerializer,
-                                        SerializerMethodField)
+                                        SerializerMethodField,
+                                        ReadOnlyField
+                                        )
 
 from tests.api.serializers import TestListSerializer, QuestionSerializer
 from tests.models import QuestionModel
@@ -7,7 +9,7 @@ from .models import LearningSession, QuestionStatistic
 
 
 class LearningSessionSerializer(ModelSerializer):
-    test = TestListSerializer()
+   # test = TestListSerializer()
     statistics = SerializerMethodField()
 
     class Meta:
@@ -21,11 +23,11 @@ class LearningSessionSerializer(ModelSerializer):
             'correct_answers',
             'test',
             'statistics',
-
         ]
+      #  read_only_field = ['statistics']
 
     def get_statistics(self, obj):
-        qs = QuestionStatistic.objects.filter(learning_session=obj.id) #filter(content_type = obj.__class__)
+        qs = QuestionStatistic.objects.filter(learning_session=obj.id)
         return QuestionStatisticSerializer(qs, many=True).data
 
     def create(self, validated_data):
@@ -48,10 +50,13 @@ class QuestionStatisticSerializer(ModelSerializer):
     class Meta:
         model = QuestionStatistic
         fields = [
+            'id',
             'replies',
-            'attempts',
+            'wrong_answers',
+            'correct_answers',
             'question',
         ]
+        read_only_field = ['question']
 
 
 class LearningSessionCreateSerializer(ModelSerializer):
@@ -59,20 +64,24 @@ class LearningSessionCreateSerializer(ModelSerializer):
     class Meta:
         model = LearningSession
         fields = [
+            'id',
             'user',
             'is_active',
             'test',
+            'wrong_answers',
+            'correct_answers'
         ]
+        read_only_fields = ['wrong_answers', 'correct_answers']
 
     def create(self, validated_data):
         test = validated_data['test']
 
-        learnSession = LearningSession.objects.create(**validated_data)
+        learn_session = LearningSession.objects.create(**validated_data)
         questions_qs = QuestionModel.objects.filter(test=test)
         for question in questions_qs:
-            QuestionStatistic.objects.create(question=question, learning_session = learnSession)
-        print('smth')
-        return learnSession
+            QuestionStatistic.objects.create(question=question,
+                                             learning_session=learn_session)
+        return learn_session
 
 
 class LearningSessionListSerializer(ModelSerializer):

@@ -48,11 +48,14 @@ class QuestionStatistic(models.Model):
 
     learning_session = models.ForeignKey(LearningSession)
     replies = models.IntegerField(default=3)
-    attempts = models.IntegerField(default=0)
+    wrong_answers = models.IntegerField(default=0)
+    correct_answers = models.IntegerField(default=0)
 
     def clean(self):
-        user_qs = QuestionStatistic.objects.filter(question=self.question,
-                                                   learning_session=self.learning_session)
+        user_qs = QuestionStatistic.objects.filter(
+            question=self.question,
+            learning_session=self.learning_session
+        )
         if len(user_qs) > 0:
             if self.question == user_qs.first().question:
                 if self.learning_session == user_qs.first().learning_session:
