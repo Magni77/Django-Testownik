@@ -29,7 +29,7 @@ urlpatterns = [
     url(r'^api/comments/', include('comments.urls', namespace='comments-api')),
 
 
-    url(r'^api/docs/$', include_docs_urls(title='api-docs')),
+    url(r'^api/docs/', include_docs_urls(title='api-docs')),
 
 ]
 

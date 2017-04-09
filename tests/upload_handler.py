@@ -50,9 +50,14 @@ class UploadHandler():
         for x in data_dic[2:]:
             is_correct = self.correct_answer(data_dic[0], a)
             if type(x) is InMemoryUploadedFile:
-                answer = self.create_answer_model(question,answer=x, img_answer=x, is_correct=is_correct)
+                answer = self.create_answer_model(question,
+                                                  answer=x,
+                                                  img_answer=x,
+                                                  is_correct=is_correct)
             else:
-                answer = self.create_answer_model(question, answer=x, is_correct=is_correct)
+                answer = self.create_answer_model(question,
+                                                  answer=x,
+                                                  is_correct=is_correct)
             answer.save()
             a += 1
 
@@ -121,7 +126,8 @@ class UploadHandler():
                                  test=self.test_choice)
         return question
 
-    def create_answer_model(self, question, answer=None, img_answer=None, is_correct=False):
+    def create_answer_model(self, question, answer=None,
+                            img_answer=None, is_correct=False):
         answer = AnswerModel(user=self.user,
                              answer=answer,
                              img_answer=img_answer,

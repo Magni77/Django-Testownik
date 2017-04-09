@@ -30,7 +30,7 @@ class UserCreateSerializer(ModelSerializer):
 
     def validate_email(self, value):
         data = self.get_initial()
-        email = value
+        email = value.lower()
 
         user_qs = User.objects.filter(email=email)
         if user_qs.exists():
@@ -40,11 +40,11 @@ class UserCreateSerializer(ModelSerializer):
 
     def create(self, data):
         username = data['username']
-        email = data['email']
+        email = data['email'].lower()
         password = data['password']
         user_obj = User(
-                username = username,
-                email = email
+                username=username,
+                email=email
         )
         user_obj.set_password(password)
         user_obj.save()

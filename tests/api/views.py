@@ -18,10 +18,29 @@ from .serializers import TestSerializer, TestListSerializer, \
     MarkSerializer, QuestionDetailSerializer
 
 
-class TestListAPIView(ListCreateAPIView):
+class PublicTestListAPIView(ListCreateAPIView):
     queryset = TestModel.objects.all()
     serializer_class = TestListSerializer
-    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        return TestModel.objects.filter(
+            is_public=True
+        )
+
+    def perform_create(self, serializer):
+        serializer.save(
+            user=self.request.user,
+        )
+
+
+class PrivateTestListAPIView(ListCreateAPIView):
+    queryset = TestModel.objects.all()
+    serializer_class = TestListSerializer
+
+    def get_queryset(self):
+        return TestModel.objects.filter(
+            user=self.request.user
+        )
 
     def perform_create(self, serializer):
         serializer.save(

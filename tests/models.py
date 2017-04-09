@@ -8,7 +8,7 @@ User = settings.AUTH_USER_MODEL
 
 
 def upload_location(instance, filename):
-    return "%s/%s" %(instance.user, filename)
+    return "%s/%s" % (instance.user, filename)
 
 
 class TestModel(models.Model):
