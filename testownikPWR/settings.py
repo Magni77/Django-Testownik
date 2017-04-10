@@ -9,11 +9,13 @@ https://docs.djangoproject.com/en/1.10/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
+from boto.s3.connection import S3Connection
 
 import datetime
+import dj_database_url
+
 import os
 
-import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -181,8 +183,7 @@ USE_TZ = True
 
 #AWS_S3_SECURE_URLS = False       # use http instead of https
 
-AWS_ACCESS_KEY_ID = "AKIAJCRAGA5ZCS2OL42Q"
-AWS_SECRET_ACCESS_KEY = "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"
+s3 = S3Connection(os.environ['S3_KEY'], os.environ['S3_SECRET'])
 
 
 AWS_FILE_EXPIRE = 200
@@ -211,3 +212,4 @@ AWS_HEADERS = {
     'Cache-Control': 'max-age=%d' % (int(two_months.total_seconds()), ),
 
 }
+
