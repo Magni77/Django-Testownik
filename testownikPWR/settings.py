@@ -9,13 +9,11 @@ https://docs.djangoproject.com/en/1.10/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
-from boto.s3.connection import S3Connection
 
 import datetime
-import dj_database_url
-
 import os
 
+import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -183,8 +181,10 @@ USE_TZ = True
 
 #AWS_S3_SECURE_URLS = False       # use http instead of https
 
-s3 = S3Connection(os.environ['S3_KEY'], os.environ['S3_SECRET'])
-
+AWS_ACCESS_KEY_ID = "AKIAJUTOF5JH347QBTCA"
+AWS_SECRET_ACCESS_KEY = "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"
+#from boto.s3.connection import S3Connection
+#s3 = S3Connection(os.environ['S3_KEY'], os.environ['S3_SECRET'])
 
 AWS_FILE_EXPIRE = 200
 AWS_PRELOAD_METADATA = True
@@ -213,3 +213,4 @@ AWS_HEADERS = {
 
 }
 
+# heroku config:set S3_KEY= S3_SECRET=
