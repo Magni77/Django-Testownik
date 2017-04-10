@@ -67,6 +67,20 @@ class QuestionStatisticSerializer(ModelSerializer):
         read_only_field = ['question']
 
 
+class QuestionStatisticDetailSerializer(ModelSerializer):
+
+    class Meta:
+        model = QuestionStatistic
+        fields = [
+            'id',
+            'replies',
+            'wrong_answers',
+            'correct_answers',
+            'question',
+        ]
+        read_only_field = ['question']
+
+
 class LearningSessionCreateSerializer(ModelSerializer):
 
     class Meta:

@@ -1,8 +1,10 @@
+
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 from django.db import models
+from django.utils import timezone
 
 User = settings.AUTH_USER_MODEL
 
@@ -16,6 +18,11 @@ class TestModel(models.Model):
     title = models.CharField(max_length=150)
     description = models.TextField(blank=True, null=True)
     is_public = models.BooleanField(default=False)
+    teacher = models.CharField(max_length=100, blank=True)
+    department = models.CharField(max_length=20, blank=True)
+    subject = models.CharField(max_length=100, blank=True)
+    created = models.DateTimeField(default=timezone.now)
+    updated = models.DateTimeField(auto_now=True, auto_now_add=False)
 
     #TODO add test's rating
    # questions = models.ManyToManyField(QuestionModel, blank=True)

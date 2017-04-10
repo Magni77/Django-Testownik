@@ -1,8 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets
 from rest_framework import generics
-from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -10,7 +8,8 @@ from .models import LearningSession, QuestionStatistic
 from .serializers import (LearningSessionListSerializer,
                           LearningSessionSerializer,
                           LearningSessionCreateSerializer,
-                          QuestionStatisticSerializer)
+                          QuestionStatisticSerializer,
+                          QuestionStatisticDetailSerializer)
 
 User = get_user_model()
 
@@ -26,7 +25,7 @@ class LearningSessionListAPIView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         qs = LearningSession.objects.filter(user=self.request.user)
         for session in qs:
-            session.is_active=False
+            session.is_active = False
             session.save()
 
         serializer.save(
@@ -53,7 +52,7 @@ class StatisticsListAPIView(generics.ListAPIView):
 
 
 class StatisticsDetailAPIView(generics.RetrieveAPIView):
-    serializer_class = QuestionStatisticSerializer
+    serializer_class = QuestionStatisticDetailSerializer
 
     def get_queryset(self):
         return QuestionStatistic.objects.filter(
