@@ -28,7 +28,7 @@ SECRET_KEY = 'pybw^)gs(y%)n+@-+y(fd*2#zyp!zqi*(p+q#0869@a%%!j!u-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['testownikpwr.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'testownikpwr.herokuapp.com']
 
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -159,58 +159,21 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.10/howto/static-files/
+#Static files (CSS, JavaScript, Images)
+#https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-# STATIC_URL = '/static/'
-#
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, "static"),
-# )
-#
-#
-# STATIC_ROOT = os.path.join(BASE_DIR, "live-static-files", "static-root")
-#
-# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
-#
-# #STATIC_ROOT = "/home/cfedeploy/webapps/cfehome_static_root/"
-#
-# MEDIA_URL = "/media/"
-#
-# MEDIA_ROOT = os.path.join(BASE_DIR, "live-static-files", "media-root")
+STATIC_URL = '/static/'
 
-#AWS_S3_SECURE_URLS = False       # use http instead of https
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
 
-AWS_ACCESS_KEY_ID = "AKIAJUTOF5JH347QBTCA"
-AWS_SECRET_ACCESS_KEY = "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"
-#from boto.s3.connection import S3Connection
-#s3 = S3Connection(os.environ['S3_KEY'], os.environ['S3_SECRET'])
 
-AWS_FILE_EXPIRE = 200
-AWS_PRELOAD_METADATA = True
-AWS_QUERYSTRING_AUTH = True
+STATIC_ROOT = os.path.join(BASE_DIR, "live-static-files", "static-root")
 
-DEFAULT_FILE_STORAGE = 'testownikPWR.utils.MediaS3BotoStorage'
-STATICFILES_STORAGE = 'testownikPWR.utils.StaticS3BotoStorage'
-AWS_STORAGE_BUCKET_NAME = 'bucket-tesownik-ireland'
-S3DIRECT_REGION = 'eu-west-1'
-AWS_S3_HOST = 's3-eu-west-1.amazonaws.com'
-S3_URL = '//%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
-MEDIA_URL = '//%s.s3.amazonaws.com/media/' % AWS_STORAGE_BUCKET_NAME
-MEDIA_ROOT = MEDIA_URL
-STATIC_URL = S3_URL + 'static/'
-ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
-import datetime
 
-two_months = datetime.timedelta(days=61)
-date_two_months_later = datetime.date.today() + two_months
-expires = date_two_months_later.strftime("%A, %d %B %Y 20:00:00 GMT")
+MEDIA_URL = "/media/"
 
-AWS_HEADERS = {
-    'Expires': expires,
-    'Cache-Control': 'max-age=%d' % (int(two_months.total_seconds()), ),
-
-}
-
-# heroku config:set S3_KEY= S3_SECRET=
+MEDIA_ROOT = os.path.join(BASE_DIR, "live-static-files", "media-root")
